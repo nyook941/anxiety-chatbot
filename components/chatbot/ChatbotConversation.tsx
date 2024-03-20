@@ -5,16 +5,11 @@ import {
   ScrollView,
   KeyboardAvoidingView,
 } from "react-native";
-import React, { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import React from "react";
+import { useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
-import { addUserChatMessage } from "../../redux/slices/chat-slice";
 
 export default function ChatbotConversation() {
-  const dispatch = useDispatch();
-  useEffect(() => {
-    dispatch(addUserChatMessage(String(Math.random())));
-  }, []);
   const conversation = useSelector((state: RootState) => state.chat);
 
   return (

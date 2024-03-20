@@ -1,14 +1,5 @@
 import React, { useState } from "react";
-import {
-  View,
-  TextInput,
-  StyleSheet,
-  TextInputKeyPressEventData,
-  NativeSyntheticEvent,
-  Button,
-  Pressable,
-  Text,
-} from "react-native";
+import { View, TextInput, StyleSheet, Pressable } from "react-native";
 import { useDispatch } from "react-redux";
 import { addUserChatMessage } from "../../redux/slices/chat-slice";
 import { FontAwesome, MaterialCommunityIcons } from "@expo/vector-icons";
