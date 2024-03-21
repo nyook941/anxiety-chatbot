@@ -1,8 +1,9 @@
 import { View, Text, StyleSheet, Pressable } from "react-native";
-import React, { useEffect } from "react";
+import React from "react";
 import { MoodDiaryService } from "../MoodDiaryServices";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { RootState } from "../../../redux/store";
+import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 
 export default function InlineMoodCalendarItems({ item }: { item: string }) {
   const monthHeader = MoodDiaryService.displayMonthHeader(item);
@@ -21,15 +22,35 @@ export default function InlineMoodCalendarItems({ item }: { item: string }) {
       )}
       <Text style={styles.title}>{trimmedItem}</Text>
       {moods === undefined ? (
-        <Text>No mood logged on this day</Text>
+        <Pressable style={styles.moodContainer}>
+          <MaterialIcons name={"add"} size={30} />
+          <View style={styles.textContainer}>
+            <Text style={styles.moodText}>Add a mood</Text>
+            <Text style={styles.moodTime}>
+              There was no mood logged for this day
+            </Text>
+          </View>
+        </Pressable>
       ) : (
         <>
           {moods.map((mood) => (
-            <Pressable style={styles.moodContainer}>
-              <Text style={styles.moodText}>{mood}</Text>
-              <Text style={styles.moodTime}>10:24</Text>
-            </Pressable>
+            <>
+              <Pressable style={styles.moodContainer}>
+                <MaterialCommunityIcons
+                  name={"emoticon-angry-outline"}
+                  size={30}
+                />
+                <View style={styles.textContainer}>
+                  <Text style={styles.moodText}>{mood}</Text>
+                  <Text style={styles.moodTime}>10:24</Text>
+                </View>
+              </Pressable>
+            </>
           ))}
+          <Pressable style={styles.addContainer}>
+            <MaterialIcons name={"add"} size={16} />
+            <Text style={styles.moodText}>Add a mood</Text>
+          </Pressable>
         </>
       )}
     </View>
@@ -66,6 +87,8 @@ const styles = StyleSheet.create({
     marginVertical: 8,
     elevation: 4,
     backgroundColor: "#D19F9F",
+    flexDirection: "row",
+    alignItems: "center",
   },
   moodText: {
     fontSize: 16,
@@ -74,5 +97,13 @@ const styles = StyleSheet.create({
   moodTime: {
     fontSize: 14,
     color: "#4A4A4A",
+  },
+  textContainer: {
+    marginLeft: 8,
+  },
+  addContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 16,
   },
 });

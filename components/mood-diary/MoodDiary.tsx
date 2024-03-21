@@ -4,10 +4,8 @@ import InlineMoodCalendar from "./InlineMoodCalendar/InlineMoodCalendar";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
 import { addToMoodArr } from "../../redux/slices/mood-slice";
-import { MoodDiaryService } from "./MoodDiaryServices";
 
 export default function MoodDiary() {
-  const { moodArr } = useSelector((state: RootState) => state.mood);
   const dispatch = useDispatch();
   useEffect(() => {
     const mood = {
