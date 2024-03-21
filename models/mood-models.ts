@@ -1,6 +1,10 @@
-interface Months {
-  month: string;
-  length: number;
+interface MoodSliceState {
+  moodArr: Mood[];
 }
 
-export { Months };
+interface Mood {
+  date: string;
+  moods: string[];
+}
+
+export { MoodSliceState, Mood };
