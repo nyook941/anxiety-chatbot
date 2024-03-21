@@ -11,7 +11,6 @@ export default function ChatbotTextInput() {
   const handleMicrophone = () => {};
 
   const handleSubmit = () => {
-    console.log("Enter pressed");
     dispatch(addUserChatMessage(message));
     setMessage("");
   };

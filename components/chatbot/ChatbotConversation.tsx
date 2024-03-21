@@ -5,33 +5,45 @@ import {
   ScrollView,
   KeyboardAvoidingView,
 } from "react-native";
-import React from "react";
+import React, { useRef } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
+import NoConversationHistory from "./NoConversationHistory";
 
 export default function ChatbotConversation() {
+  const scrollViewRef = useRef<ScrollView>(null);
   const conversation = useSelector((state: RootState) => state.chat);
 
   return (
-    <KeyboardAvoidingView style={styles.container}>
-      <ScrollView style={{ padding: 16 }}>
-        {conversation.interactions.map((interaction, index) => (
-          <>
-            <View style={styles.userChatContainer} id={String(index)}>
-              <Text style={styles.userChatText}>
-                {interaction.userChat.message}
-              </Text>
-            </View>
-            <View style={styles.systemChatContainer} id={String(index)}>
-              <Text style={styles.systemChatText}>
-                {interaction.systemChat.message ?? "loading"}
-              </Text>
-            </View>
-          </>
-        ))}
-        <View style={{ height: 16 }}></View>
-      </ScrollView>
-    </KeyboardAvoidingView>
+    <View style={styles.container}>
+      {conversation.interactions.length === 0 ? (
+        <NoConversationHistory />
+      ) : (
+        <ScrollView
+          style={{ padding: 16 }}
+          ref={scrollViewRef}
+          onContentSizeChange={() =>
+            scrollViewRef.current?.scrollToEnd({ animated: true })
+          }
+        >
+          {conversation.interactions.map((interaction, index) => (
+            <>
+              <View style={styles.userChatContainer} id={String(index)}>
+                <Text style={styles.userChatText}>
+                  {interaction.userChat.message}
+                </Text>
+              </View>
+              <View style={styles.systemChatContainer} id={String(index)}>
+                <Text style={styles.systemChatText}>
+                  {interaction.systemChat.message ?? "loading"}
+                </Text>
+              </View>
+            </>
+          ))}
+        </ScrollView>
+      )}
+      <View style={{ height: 16 }}></View>
+    </View>
   );
 }
 
