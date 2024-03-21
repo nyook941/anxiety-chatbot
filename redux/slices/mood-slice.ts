@@ -13,15 +13,18 @@ export const moodSlice = createSlice({
       state.moodArr = action.payload;
     },
     addToMoodArr: (state, action: PayloadAction<Mood>) => {
-      const mood = state.moodArr.find((m) => {
-        m.date === action.payload.date;
-      });
-      if (mood) {
+      const moodIndex = state.moodArr.findIndex(
+        (m) => m.date === action.payload.date
+      );
+      if (moodIndex !== -1) {
+        state.moodArr[moodIndex].moods.push(...action.payload.moods);
+      } else {
+        state.moodArr.push(action.payload);
       }
     },
   },
 });
 
-export const {} = moodSlice.actions;
+export const { setMoodArr, addToMoodArr } = moodSlice.actions;
 
 export default moodSlice.reducer;
