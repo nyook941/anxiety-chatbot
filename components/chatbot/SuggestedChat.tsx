@@ -1,5 +1,7 @@
 import { Text, Pressable, StyleSheet } from "react-native";
 import React from "react";
+import { useDispatch } from "react-redux";
+import { addUserChatMessage } from "../../redux/slices/chat-slice";
 
 export default function SuggestedChat({
   title,
@@ -8,8 +10,14 @@ export default function SuggestedChat({
   title: string;
   subtitle: string;
 }) {
+  const dispatch = useDispatch();
+
+  const handlePress = () => {
+    dispatch(addUserChatMessage(title + " " + subtitle));
+  };
+
   return (
-    <Pressable style={styles.container}>
+    <Pressable style={styles.container} onPress={() => handlePress()}>
       <Text style={styles.title}>{title}</Text>
       <Text style={styles.subtitle}>{subtitle}</Text>
     </Pressable>
