@@ -20,7 +20,7 @@ export default function ChatbotConversation() {
         <NoConversationHistory />
       ) : (
         <ScrollView
-          style={{ padding: 16 }}
+          style={{ padding: 30 }}
           ref={scrollViewRef}
           onContentSizeChange={() =>
             scrollViewRef.current?.scrollToEnd({ animated: true })
