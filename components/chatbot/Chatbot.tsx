@@ -35,13 +35,13 @@ export default function Chatbot() {
   const handleMicrophone = () => {};
 
   useEffect(() => {
-    setUserChatAnimations([...userChatAnimations, new Animated.Value(100)]);
+    setUserChatAnimations([...userChatAnimations, new Animated.Value(200)]);
     console.log(conversation.interactions.length);
     console.log("state", userChatAnimations.length);
     if (userChatAnimations.length !== 0) {
       Animated.timing(userChatAnimations[userChatAnimations.length - 1], {
         toValue: 0,
-        duration: 500,
+        duration: 300,
         useNativeDriver: true,
       }).start();
     }
@@ -94,7 +94,12 @@ export default function Chatbot() {
                 <Animated.View
                   style={[
                     styles.userChatContainer,
-                    { transform: [{ translateY: userChatAnimations[index] }] },
+                    {
+                      transform: [
+                        { translateY: userChatAnimations[index] },
+                        { translateX: userChatAnimations[index] },
+                      ],
+                    },
                   ]}
                 >
                   <Text style={styles.userChatText}>
