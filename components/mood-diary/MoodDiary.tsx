@@ -1,23 +1,20 @@
-import { View, Text, StyleSheet, SafeAreaView, ScrollView } from "react-native";
+import { Text, StyleSheet, SafeAreaView, ScrollView } from "react-native";
 import React, { useEffect } from "react";
-import InlineMoodCalendar from "./InlineMoodCalendar/InlineMoodCalendar";
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../../redux/store";
-import { addToMoodArr } from "../../redux/slices/mood-slice";
+import { MoodDiaryService } from "./MoodDiaryServices";
+import InlineMoodCalendarItems from "./InlineMoodCalendar/InlineMoodCalendarItems";
+import { FlatList } from "react-native-gesture-handler";
 
 export default function MoodDiary() {
-  const dispatch = useDispatch();
-  useEffect(() => {
-    const mood = {
-      date: "March Thursday, 21st",
-      moods: ["Happy", "Sad"],
-    };
-    dispatch(addToMoodArr(mood));
-  }, []);
   return (
     <SafeAreaView style={styles.container}>
-      <Text style={styles.title}>Mood Diary</Text>
-      <InlineMoodCalendar />
+      <FlatList
+        keyExtractor={(item) => item}
+        ListHeaderComponent={<Text style={styles.title}>Mood Diary</Text>}
+        data={MoodDiaryService.getDatesArray()}
+        renderItem={({ item }) => <InlineMoodCalendarItems item={item} />}
+        showsVerticalScrollIndicator={false}
+        onEndReached={() => MoodDiaryService.addDatesForMonth()}
+      />
     </SafeAreaView>
   );
 }
@@ -27,10 +24,11 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#D19F9F",
     width: "100%",
-    padding: 16,
+    paddingHorizontal: 16,
   },
   title: {
     fontSize: 48,
     fontWeight: "400",
+    marginTop: 76,
   },
 });

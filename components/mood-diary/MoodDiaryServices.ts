@@ -1,5 +1,3 @@
-import { Mood } from "../../models/mood-models";
-
 export class MoodDiaryService {
   private static datesArray: string[] = [];
   private static currentDate: Date | null = null;

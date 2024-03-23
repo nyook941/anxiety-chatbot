@@ -16,7 +16,7 @@ export default function ChatbotTextInput() {
   };
 
   return (
-    <View style={styles.container}>
+    <View style={styles.inputContainer}>
       <View style={styles.userInputContainer}>
         <TextInput
           editable
@@ -45,7 +45,7 @@ export default function ChatbotTextInput() {
 }
 
 const styles = StyleSheet.create({
-  container: {
+  inputContainer: {
     backgroundColor: "#3A2D2D",
     width: "100%",
     alignItems: "center",

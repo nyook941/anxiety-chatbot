@@ -22,15 +22,18 @@ export default function InlineMoodCalendarItems({ item }: { item: string }) {
       )}
       <Text style={styles.title}>{trimmedItem}</Text>
       {moods === undefined ? (
-        <Pressable style={styles.moodContainer}>
-          <MaterialIcons name={"add"} size={30} />
-          <View style={styles.textContainer}>
-            <Text style={styles.moodText}>Add a mood</Text>
-            <Text style={styles.moodTime}>
-              There was no mood logged for this day
-            </Text>
-          </View>
-        </Pressable>
+        <>
+          <Pressable style={styles.moodContainer}>
+            <MaterialIcons name={"add"} size={30} />
+            <View style={styles.textContainer}>
+              <Text style={styles.moodText}>Add a mood</Text>
+              <Text style={styles.moodTime}>
+                There was no mood logged for this day
+              </Text>
+            </View>
+          </Pressable>
+          <View style={{ padding: 8 }} />
+        </>
       ) : (
         <>
           {moods.map((mood) => (

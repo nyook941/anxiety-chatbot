@@ -1,6 +1,22 @@
-import { View, Text, StyleSheet, Image, Keyboard } from "react-native";
 import React, { useEffect, useState } from "react";
+import {
+  LayoutAnimation,
+  Platform,
+  UIManager,
+  StyleSheet,
+  View,
+  Text,
+  Image,
+  Keyboard,
+} from "react-native";
 import SuggestedChat from "./SuggestedChat";
+
+if (
+  Platform.OS === "android" &&
+  UIManager.setLayoutAnimationEnabledExperimental
+) {
+  UIManager.setLayoutAnimationEnabledExperimental(true);
+}
 
 export default function NoConversationHistory() {
   const [keyboardVisible, setKeyboardVisible] = useState(false);
@@ -8,11 +24,17 @@ export default function NoConversationHistory() {
   useEffect(() => {
     const keyboardDidShowListener = Keyboard.addListener(
       "keyboardDidShow",
-      () => setKeyboardVisible(true)
+      () => {
+        LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+        setKeyboardVisible(true);
+      }
     );
     const keyboardDidHideListener = Keyboard.addListener(
       "keyboardDidHide",
-      () => setKeyboardVisible(false)
+      () => {
+        LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+        setKeyboardVisible(false);
+      }
     );
     return () => {
       keyboardDidShowListener.remove();
@@ -21,7 +43,7 @@ export default function NoConversationHistory() {
   }, []);
 
   return (
-    <View style={styles.container}>
+    <>
       <View style={styles.iconTitleView}>
         <Image
           style={styles.logo}
@@ -45,16 +67,16 @@ export default function NoConversationHistory() {
           />
         </View>
       )}
-    </View>
+    </>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "space-evenly",
-    alignItems: "center",
-  },
+  // container: {
+  //   flex: 1,
+  //   justifyContent: "space-evenly",
+  //   alignItems: "center",
+  // },
   logo: {
     width: 120,
     height: 120,
@@ -75,9 +97,9 @@ const styles = StyleSheet.create({
   },
   suggestedChatView: {
     justifyContent: "space-evenly",
-    alignItems: "center",
     flex: 1,
     width: "100%",
     padding: 32,
+    alignItems: "center",
   },
 });
