@@ -14,13 +14,18 @@ import { RootState } from "../../redux/store";
 import NoConversationHistory from "./NoConversationHistory";
 import { Ionicons } from "@expo/vector-icons";
 import { addUserChatMessage } from "../../redux/slices/chat-slice";
-import { opacity } from "react-native-reanimated/lib/typescript/reanimated2/Colors";
 
 export default function Chatbot() {
   const scrollViewRef = useRef<ScrollView>(null);
   const conversation = useSelector((state: RootState) => state.chat);
   const [message, setMessage] = useState("");
-  const [showNoConvo, setShowNoConvo] = useState(true);
+  const [showNoConvo, setShowNoConvo] = useState(
+    conversation.interactions.length === 0
+  );
+  const [userChatAnimations, setUserChatAnimations] = useState<
+    Animated.Value[]
+  >([]);
+
   const dispatch = useDispatch();
 
   const hideNoConvoHistoryAnim = useRef<Animated.Value>(
@@ -28,6 +33,27 @@ export default function Chatbot() {
   ).current;
 
   const handleMicrophone = () => {};
+
+  useEffect(() => {
+    setUserChatAnimations([...userChatAnimations, new Animated.Value(100)]);
+    console.log(conversation.interactions.length);
+    console.log("state", userChatAnimations.length);
+    if (userChatAnimations.length !== 0) {
+      Animated.timing(userChatAnimations[userChatAnimations.length - 1], {
+        toValue: 0,
+        duration: 500,
+        useNativeDriver: true,
+      }).start();
+    }
+  }, [conversation.interactions.length]);
+
+  // useEffect(() => {
+  //   Animated.timing(userChatAnimations[userChatAnimations.length - 1], {
+  //     toValue: 0,
+  //     duration: 500,
+  //     useNativeDriver: true,
+  //   }).start();
+  // }, [userChatAnimations]);
 
   const handleSubmit = () => {
     if (conversation.interactions.length === 0) {
@@ -65,11 +91,16 @@ export default function Chatbot() {
           >
             {conversation.interactions.map((interaction, index) => (
               <React.Fragment key={index}>
-                <View style={styles.userChatContainer}>
+                <Animated.View
+                  style={[
+                    styles.userChatContainer,
+                    { transform: [{ translateY: userChatAnimations[index] }] },
+                  ]}
+                >
                   <Text style={styles.userChatText}>
                     {interaction.userChat.message}
                   </Text>
-                </View>
+                </Animated.View>
                 <View style={styles.systemChatContainer}>
                   <Text style={styles.systemChatText}>
                     {interaction.systemChat.message ?? "loading"}
@@ -77,6 +108,7 @@ export default function Chatbot() {
                 </View>
               </React.Fragment>
             ))}
+            <View style={{ padding: 8 }}></View>
           </ScrollView>
         )}
         <View style={styles.inputContainer}>
