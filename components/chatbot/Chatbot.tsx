@@ -39,6 +39,21 @@ export default function Chatbot() {
     console.log(conversation.interactions.length);
     console.log("state", userChatAnimations.length);
     if (userChatAnimations.length !== 0) {
+      console.log("animating");
+      if (userChatAnimations.length === 1) {
+        let animationTimeout = setTimeout(() => {
+          Animated.timing(userChatAnimations[userChatAnimations.length - 1], {
+            toValue: 0,
+            duration: 300,
+            useNativeDriver: true,
+          }).start();
+        }, 300);
+        return () => {
+          if (animationTimeout) {
+            clearTimeout(animationTimeout);
+          }
+        };
+      }
       Animated.timing(userChatAnimations[userChatAnimations.length - 1], {
         toValue: 0,
         duration: 300,
@@ -46,14 +61,6 @@ export default function Chatbot() {
       }).start();
     }
   }, [conversation.interactions.length]);
-
-  // useEffect(() => {
-  //   Animated.timing(userChatAnimations[userChatAnimations.length - 1], {
-  //     toValue: 0,
-  //     duration: 500,
-  //     useNativeDriver: true,
-  //   }).start();
-  // }, [userChatAnimations]);
 
   const handleSubmit = () => {
     if (conversation.interactions.length === 0) {
