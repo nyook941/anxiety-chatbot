@@ -36,10 +36,7 @@ export default function Chatbot() {
 
   useEffect(() => {
     setUserChatAnimations([...userChatAnimations, new Animated.Value(200)]);
-    console.log(conversation.interactions.length);
-    console.log("state", userChatAnimations.length);
     if (userChatAnimations.length !== 0) {
-      console.log("animating");
       if (userChatAnimations.length === 1) {
         let animationTimeout = setTimeout(() => {
           Animated.timing(userChatAnimations[userChatAnimations.length - 1], {
@@ -226,5 +223,6 @@ const styles = StyleSheet.create({
   },
   scrollView: {
     padding: 16,
+    paddingTop: 70,
   },
 });
