@@ -7,6 +7,8 @@ import {
   TextInput,
   Pressable,
   Animated,
+  NativeSyntheticEvent,
+  NativeScrollEvent,
 } from "react-native";
 import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -14,6 +16,7 @@ import { RootState } from "../../redux/store";
 import NoConversationHistory from "./NoConversationHistory";
 import { Ionicons } from "@expo/vector-icons";
 import { addUserChatMessage } from "../../redux/slices/chat-slice";
+import { setIsScreenScrolled } from "../../redux/slices/general-slice";
 
 export default function Chatbot() {
   const scrollViewRef = useRef<ScrollView>(null);
@@ -34,12 +37,22 @@ export default function Chatbot() {
 
   const handleMicrophone = () => {};
 
+  const handleScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
+    const isScrolled = event.nativeEvent.contentOffset.y > 0;
+    dispatch(setIsScreenScrolled(isScrolled));
+  };
+
   useEffect(() => {
     setUserChatAnimations([...userChatAnimations, new Animated.Value(200)]);
     if (userChatAnimations.length !== 0) {
       if (userChatAnimations.length === 1) {
+        Animated.timing(hideNoConvoHistoryAnim, {
+          toValue: 0,
+          duration: 300,
+          useNativeDriver: true,
+        }).start(() => setShowNoConvo(false));
         let animationTimeout = setTimeout(() => {
-          Animated.timing(userChatAnimations[userChatAnimations.length - 1], {
+          Animated.timing(userChatAnimations[0], {
             toValue: 0,
             duration: 300,
             useNativeDriver: true,
@@ -60,13 +73,6 @@ export default function Chatbot() {
   }, [conversation.interactions.length]);
 
   const handleSubmit = () => {
-    if (conversation.interactions.length === 0) {
-      Animated.timing(hideNoConvoHistoryAnim, {
-        toValue: 0,
-        duration: 300,
-        useNativeDriver: true,
-      }).start(() => setShowNoConvo(false));
-    }
     dispatch(addUserChatMessage(message));
     setMessage("");
   };
@@ -92,6 +98,8 @@ export default function Chatbot() {
             onContentSizeChange={() =>
               scrollViewRef.current?.scrollToEnd({ animated: true })
             }
+            onScroll={handleScroll}
+            scrollEventThrottle={16}
           >
             {conversation.interactions.map((interaction, index) => (
               <React.Fragment key={index}>
@@ -110,14 +118,16 @@ export default function Chatbot() {
                     {interaction.userChat.message}
                   </Text>
                 </Animated.View>
-                <View style={styles.systemChatContainer}>
-                  <Text style={styles.systemChatText}>
-                    {interaction.systemChat.message ?? "loading"}
-                  </Text>
-                </View>
+                {interaction.systemChat.metadata.recievedDateTime && (
+                  <View style={styles.systemChatContainer}>
+                    <Text style={styles.systemChatText}>
+                      {interaction.systemChat.message!}
+                    </Text>
+                  </View>
+                )}
               </React.Fragment>
             ))}
-            <View style={{ padding: 8 }}></View>
+            <View style={{ padding: 35 }}></View>
           </ScrollView>
         )}
         <View style={styles.inputContainer}>

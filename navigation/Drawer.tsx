@@ -21,7 +21,7 @@ export default function DrawerNavigation() {
         name="Mood Diary"
         component={MoodDiary}
         options={{
-          header: () => <DrawerHeader color={"black"} />,
+          header: () => <DrawerHeader color={"black"} background={"white"} />,
         }}
       />
     </Drawer.Navigator>
