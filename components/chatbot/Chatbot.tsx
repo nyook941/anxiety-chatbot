@@ -35,6 +35,14 @@ export default function Chatbot() {
     new Animated.Value(1)
   ).current;
 
+  const sendBackgroundAnim = useRef<Animated.Value>(
+    new Animated.Value(0)
+  ).current;
+  const backgroundColor = sendBackgroundAnim.interpolate({
+    inputRange: [0, 1],
+    outputRange: ["#272020", "#8E574C"],
+  });
+
   const handleMicrophone = () => {};
 
   const handleScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
@@ -76,6 +84,14 @@ export default function Chatbot() {
     dispatch(addUserChatMessage(message));
     setMessage("");
   };
+
+  useEffect(() => {
+    Animated.timing(sendBackgroundAnim, {
+      toValue: message.trim() ? 1 : 0,
+      duration: 300,
+      useNativeDriver: false,
+    }).start();
+  }, [message]);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -141,15 +157,16 @@ export default function Chatbot() {
               onChangeText={setMessage}
               value={message}
             />
-            <Pressable
-              style={styles.sendButtonContainer}
-              onPress={handleSubmit}
-            >
-              <Ionicons
-                name={message.trim() ? "arrow-up" : "mic"}
-                size={20}
-                color={"white"}
-              />
+            <Pressable onPress={handleSubmit}>
+              <Animated.View
+                style={[styles.sendButtonContainer, { backgroundColor }]}
+              >
+                <Ionicons
+                  name={message.trim() ? "arrow-up" : "mic"}
+                  size={20}
+                  color={"white"}
+                />
+              </Animated.View>
             </Pressable>
           </View>
         </View>
