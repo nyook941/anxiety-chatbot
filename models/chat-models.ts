@@ -1,32 +1,30 @@
-interface UserChat {
-  message: string;
+interface Chat {
+  id: number;
+  message: string | null;
+}
+
+interface UserChat extends Chat {
   metadata: {
     sentDateTime: string;
     isSent: boolean;
   };
 }
 
-interface SystemChat {
-  message: string | null;
+interface SystemChat extends Chat {
   metadata: {
     recievedDateTime: string | null;
     returnedDateTime: string | null;
     status: "pending" | "fullfilled" | "rejected" | null;
+    userChat: number;
   };
 }
 
-interface Interaction {
-  id: number;
-  userChat: UserChat;
-  systemChat: SystemChat;
-}
-
-interface Conversation {
-  interactions: Interaction[];
+interface ChatInitialState {
+  conversation: (UserChat | SystemChat)[];
 }
 
 interface ChatClientResponse {
   output_text: string;
 }
 
-export { UserChat, SystemChat, Interaction, Conversation, ChatClientResponse };
+export { UserChat, SystemChat, ChatInitialState, ChatClientResponse };

@@ -67,14 +67,12 @@ export default function Chatbot() {
           duration: 300,
           useNativeDriver: true,
         }).start(() => setShowNoConvo(false));
-        console.log(console.log(userChatAnimations));
         setTimeout(() => {
           Animated.timing(userChatAnimations[0], {
             toValue: 0,
             duration: 300,
             useNativeDriver: true,
           }).start();
-          console.log(console.log(userChatAnimations));
         }, 300);
       }
       Animated.timing(userChatAnimations[userChatAnimations.length - 1], {
@@ -88,14 +86,14 @@ export default function Chatbot() {
       conversation.interactions[conversation.interactions.length - 1];
     dispatch(fetchSystemResponse(interaction));
 
-    setSystemChatAnimations([...systemChatAnimations, new Animated.Value(200)]);
-    if (systemChatAnimations.length !== 0) {
-      Animated.timing(systemChatAnimations[systemChatAnimations.length - 1], {
-        toValue: 0,
-        duration: 300,
-        useNativeDriver: true,
-      }).start();
-    }
+    // setSystemChatAnimations([...systemChatAnimations, new Animated.Value(200)]);
+    // if (systemChatAnimations.length !== 0) {
+    //   Animated.timing(systemChatAnimations[systemChatAnimations.length - 1], {
+    //     toValue: 0,
+    //     duration: 300,
+    //     useNativeDriver: true,
+    //   }).start();
+    // }
   }, [conversation.interactions.length]);
 
   const handleSubmit = () => {
@@ -153,7 +151,7 @@ export default function Chatbot() {
                   </Text>
                 </Animated.View>
                 {interaction.systemChat.metadata.status === "pending" ? (
-                  <View style={styles.systemChatContainer}>
+                  <View style={styles.systemChatPendingContainer}>
                     <Image
                       style={styles.loadingGif}
                       source={require("../../assets/typing.gif")}
@@ -229,6 +227,15 @@ const styles = StyleSheet.create({
     fontWeight: "500",
   },
   systemChatContainer: {
+    backgroundColor: "#EEEEEE",
+    maxWidth: "75%",
+    alignSelf: "flex-start",
+    borderTopLeftRadius: 25,
+    borderTopRightRadius: 25,
+    borderBottomRightRadius: 25,
+    marginVertical: 16,
+  },
+  systemChatPendingContainer: {
     backgroundColor: "#EEEEEE",
     maxWidth: "75%",
     alignSelf: "flex-start",

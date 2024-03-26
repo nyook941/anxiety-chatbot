@@ -6,26 +6,35 @@ import {
 } from "@reduxjs/toolkit";
 import {
   ChatClientResponse,
-  Conversation,
-  Interaction,
+  ChatInitialState,
+  SystemChat,
+  UserChat,
 } from "../../models/chat-models";
 import { CHATBOT_API_URL, CHATBOT_API_KEY } from "@env";
 
-const initialState: Conversation = {
-  interactions: [],
+const initialState: ChatInitialState = {
+  conversation: [],
 };
 
-const markInteractionAsPending = createAction<number>(
+const addSystemChat = createAction<{ userId: number; systemId: number }>(
   "chat/markInteractionAsPending"
 );
 
 export const fetchSystemResponse = createAsyncThunk(
   "chat/fetchSystemResponse",
-  async (interaction: Interaction, { dispatch }) => {
-    dispatch(markInteractionAsPending(interaction.id));
-    const baseUrl = CHATBOT_API_URL;
+  async (
+    payload: { userChat: UserChat; conversation: (UserChat | SystemChat)[] },
+    { dispatch }
+  ) => {
+    dispatch(
+      addSystemChat({
+        userId: payload.userChat.id,
+        systemId: payload.conversation.length,
+      })
+    );
+    const baseUrl = CHATBOT_API_URL + "testing";
     const data = {
-      question: interaction.userChat.message,
+      question: payload.userChat.message,
     };
     const response = await fetch(baseUrl, {
       method: "PUT",
@@ -35,7 +44,11 @@ export const fetchSystemResponse = createAsyncThunk(
       body: JSON.stringify(data),
     });
     const systemResponse = (await response.json()) as ChatClientResponse;
-    return { id: interaction.id, systemResponse };
+    return {
+      userId: payload.userChat.id,
+      systemId: payload.conversation.length,
+      systemResponse,
+    };
   }
 );
 
@@ -44,58 +57,39 @@ export const chatSlice = createSlice({
   initialState,
   reducers: {
     addUserChatMessage: (state, action: PayloadAction<string>) => {
-      const interaction: Interaction = {
-        id: state.interactions.length,
-        userChat: {
-          message: action.payload,
-          metadata: {
-            sentDateTime: new Date().toISOString(),
-            isSent: false,
-          },
-        },
-        systemChat: {
-          message: null,
-          metadata: {
-            recievedDateTime: null,
-            returnedDateTime: null,
-            status: null,
-          },
+      const userChat: UserChat = {
+        id: state.conversation.length,
+
+        message: action.payload,
+        metadata: {
+          sentDateTime: new Date().toISOString(),
+          isSent: false,
         },
       };
-      state.interactions.push(interaction);
+      state.conversation.push(userChat);
     },
   },
   extraReducers: (builder) => {
     builder
-      .addCase(markInteractionAsPending, (state, action) => {
-        const interaction = state.interactions.find(
-          (i) => i.id === action.payload
-        );
-        if (interaction) {
-          interaction.systemChat.metadata.recievedDateTime =
-            new Date().toISOString();
-          interaction.systemChat.metadata.status = "pending";
-        }
+      .addCase(addSystemChat, (state, action) => {
+        const systemChat: SystemChat = {
+          id: action.payload.systemId,
+          message: null,
+          metadata: {
+            recievedDateTime: new Date().toISOString(),
+            returnedDateTime: null,
+            status: "pending",
+            userChat: action.payload.userId,
+          },
+        };
+        state.conversation.push(systemChat);
       })
-      .addCase(
-        fetchSystemResponse.fulfilled,
-        (
-          state,
-          action: PayloadAction<{
-            id: number;
-            systemResponse: ChatClientResponse;
-          }>
-        ) => {
-          const { id, systemResponse } = action.payload;
-          const interaction = state.interactions.find((i) => i.id === id);
-          if (interaction) {
-            interaction.systemChat.message = systemResponse.output_text;
-            interaction.systemChat.metadata.returnedDateTime =
-              new Date().toISOString();
-            interaction.systemChat.metadata.status = "fullfilled";
-          }
-        }
-      );
+      .addCase(fetchSystemResponse.fulfilled, (state, action) => {
+        state.conversation[action.payload.systemId].message =
+          action.payload.systemResponse.output_text;
+        state.conversation[action.payload.systemId].metadata?.status =
+          "fullfilled";
+      });
   },
 });
 
