@@ -1,25 +1,41 @@
-import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import {
+  createAction,
+  createAsyncThunk,
+  createSlice,
+  PayloadAction,
+} from "@reduxjs/toolkit";
 import {
   ChatClientResponse,
-  chatClientResponse,
   Conversation,
   Interaction,
-  UserChat,
 } from "../../models/chat-models";
 
 const initialState: Conversation = {
   interactions: [],
 };
 
+const markInteractionAsPending = createAction<number>(
+  "chat/markInteractionAsPending"
+);
+
 const fetchSystemResponse = createAsyncThunk(
   "chat/fetchSystemResponse",
-  async (interaction: Interaction) => {
-    const response = await fetch(
-      `https://reqres.in/api/users/${interaction.userChat.message}`
-    );
+  async (interaction: Interaction, { dispatch }) => {
+    dispatch(markInteractionAsPending(interaction.id));
+    const baseUrl =
+      "https://xty88zhgt2.execute-api.us-east-2.amazonaws.com/default/KennanPortfolio";
+    const data = {
+      question: interaction.userChat.message,
+    };
+    const response = await fetch(baseUrl, {
+      method: "PUT",
+      headers: {
+        "x-api-key": process.env.CHATBOT_API_KEY || "api-key-not-found",
+      },
+      body: JSON.stringify(data),
+    });
     const systemResponse = (await response.json()) as ChatClientResponse;
-    interaction.systemChat.message = systemResponse.output_text;
-    return interaction;
+    return { id: interaction.id, systemResponse };
   }
 );
 
@@ -33,7 +49,7 @@ export const chatSlice = createSlice({
         userChat: {
           message: action.payload,
           metadata: {
-            sentDateTime: Date(),
+            sentDateTime: new Date().toISOString(),
             isSent: false,
           },
         },
@@ -42,7 +58,7 @@ export const chatSlice = createSlice({
           metadata: {
             recievedDateTime: null,
             returnedDateTime: null,
-            isComplete: false,
+            status: null,
           },
         },
       };
@@ -50,12 +66,36 @@ export const chatSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    // builder.addCase(
-    //   fetchSystemResponse.pending,
-    //   (state, action: PayloadAction<Interaction>) => {
-    //     state.interactions[state.interactions.length] = action.payload;
-    //   }
-    // );
+    builder
+      .addCase(markInteractionAsPending, (state, action) => {
+        const interaction = state.interactions.find(
+          (i) => i.id === action.payload
+        );
+        if (interaction) {
+          interaction.systemChat.metadata.recievedDateTime =
+            new Date().toISOString();
+          interaction.systemChat.metadata.status = "pending";
+        }
+      })
+      .addCase(
+        fetchSystemResponse.fulfilled,
+        (
+          state,
+          action: PayloadAction<{
+            id: number;
+            systemResponse: ChatClientResponse;
+          }>
+        ) => {
+          const { id, systemResponse } = action.payload;
+          const interaction = state.interactions.find((i) => i.id === id);
+          if (interaction) {
+            interaction.systemChat.message = systemResponse.output_text;
+            interaction.systemChat.metadata.returnedDateTime =
+              new Date().toISOString();
+            interaction.systemChat.metadata.status = "fullfilled";
+          }
+        }
+      );
   },
 });
 

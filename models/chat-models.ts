@@ -11,7 +11,7 @@ interface SystemChat {
   metadata: {
     recievedDateTime: string | null;
     returnedDateTime: string | null;
-    isComplete: boolean;
+    status: "pending" | "fullfilled" | "rejected" | null;
   };
 }
 
