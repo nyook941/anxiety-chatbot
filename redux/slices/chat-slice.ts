@@ -9,6 +9,7 @@ import {
   Conversation,
   Interaction,
 } from "../../models/chat-models";
+import { CHATBOT_API_URL, CHATBOT_API_KEY } from "@env";
 
 const initialState: Conversation = {
   interactions: [],
@@ -21,16 +22,15 @@ const markInteractionAsPending = createAction<number>(
 export const fetchSystemResponse = createAsyncThunk(
   "chat/fetchSystemResponse",
   async (interaction: Interaction, { dispatch }) => {
-    console.log("thunk dispatched");
     dispatch(markInteractionAsPending(interaction.id));
-    const baseUrl = process.env.CHATBOT_API_URL!;
+    const baseUrl = CHATBOT_API_URL;
     const data = {
       question: interaction.userChat.message,
     };
     const response = await fetch(baseUrl, {
       method: "PUT",
       headers: {
-        "x-api-key": process.env.CHATBOT_API_KEY!,
+        "x-api-key": CHATBOT_API_KEY,
       },
       body: JSON.stringify(data),
     });

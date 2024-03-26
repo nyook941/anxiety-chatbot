@@ -9,6 +9,7 @@ import {
   Animated,
   NativeSyntheticEvent,
   NativeScrollEvent,
+  Image,
 } from "react-native";
 import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -135,11 +136,23 @@ export default function Chatbot() {
                     {interaction.userChat.message}
                   </Text>
                 </Animated.View>
-                {interaction.systemChat.metadata.recievedDateTime && (
+                {interaction.systemChat.metadata.status === "pending" ? (
+                  <View style={styles.systemChatContainer}>
+                    <Image
+                      style={styles.loadingGif}
+                      source={require("../../assets/typing.gif")}
+                      resizeMode="contain"
+                    />
+                  </View>
+                ) : interaction.systemChat.metadata.status === "fullfilled" ? (
                   <View style={styles.systemChatContainer}>
                     <Text style={styles.systemChatText}>
-                      {interaction.systemChat.message!}
+                      {interaction.systemChat.message}
                     </Text>
+                  </View>
+                ) : (
+                  <View style={styles.systemChatContainer}>
+                    <Text style={styles.systemChatText}>failed to send</Text>
                   </View>
                 )}
               </React.Fragment>
@@ -252,5 +265,10 @@ const styles = StyleSheet.create({
   scrollView: {
     padding: 16,
     paddingTop: 70,
+  },
+  loadingGif: {
+    height: 30,
+    width: 40,
+    margin: 8,
   },
 });
