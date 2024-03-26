@@ -33,6 +33,10 @@ export default function Chatbot() {
     Animated.Value[]
   >([]);
 
+  const [systemChatAnimations, setSystemChatAnimations] = useState<
+    Animated.Value[]
+  >([]);
+
   const dispatch = useDispatch<AppDispatch>();
 
   const hideNoConvoHistoryAnim = useRef<Animated.Value>(
@@ -63,12 +67,14 @@ export default function Chatbot() {
           duration: 300,
           useNativeDriver: true,
         }).start(() => setShowNoConvo(false));
+        console.log(console.log(userChatAnimations));
         setTimeout(() => {
           Animated.timing(userChatAnimations[0], {
             toValue: 0,
             duration: 300,
             useNativeDriver: true,
           }).start();
+          console.log(console.log(userChatAnimations));
         }, 300);
       }
       Animated.timing(userChatAnimations[userChatAnimations.length - 1], {
@@ -77,9 +83,19 @@ export default function Chatbot() {
         useNativeDriver: true,
       }).start();
     }
+
     const interaction =
       conversation.interactions[conversation.interactions.length - 1];
     dispatch(fetchSystemResponse(interaction));
+
+    setSystemChatAnimations([...systemChatAnimations, new Animated.Value(200)]);
+    if (systemChatAnimations.length !== 0) {
+      Animated.timing(systemChatAnimations[systemChatAnimations.length - 1], {
+        toValue: 0,
+        duration: 300,
+        useNativeDriver: true,
+      }).start();
+    }
   }, [conversation.interactions.length]);
 
   const handleSubmit = () => {
