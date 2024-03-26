@@ -9,6 +9,7 @@ import {
   Conversation,
   Interaction,
 } from "../../models/chat-models";
+import { CHATBOT_API_KEY } from "@env";
 
 const initialState: Conversation = {
   interactions: [],
@@ -18,19 +19,21 @@ const markInteractionAsPending = createAction<number>(
   "chat/markInteractionAsPending"
 );
 
-const fetchSystemResponse = createAsyncThunk(
+export const fetchSystemResponse = createAsyncThunk(
   "chat/fetchSystemResponse",
   async (interaction: Interaction, { dispatch }) => {
+    console.log("thunk dispatched");
     dispatch(markInteractionAsPending(interaction.id));
     const baseUrl =
       "https://xty88zhgt2.execute-api.us-east-2.amazonaws.com/default/KennanPortfolio";
     const data = {
       question: interaction.userChat.message,
     };
+    console.log(CHATBOT_API_KEY);
     const response = await fetch(baseUrl, {
       method: "PUT",
       headers: {
-        "x-api-key": process.env.CHATBOT_API_KEY || "api-key-not-found",
+        "x-api-key": CHATBOT_API_KEY,
       },
       body: JSON.stringify(data),
     });

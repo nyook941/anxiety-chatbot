@@ -12,10 +12,13 @@ import {
 } from "react-native";
 import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../../redux/store";
+import { AppDispatch, RootState } from "../../redux/store";
 import NoConversationHistory from "./NoConversationHistory";
 import { Ionicons } from "@expo/vector-icons";
-import { addUserChatMessage } from "../../redux/slices/chat-slice";
+import {
+  addUserChatMessage,
+  fetchSystemResponse,
+} from "../../redux/slices/chat-slice";
 import { setIsScreenScrolled } from "../../redux/slices/general-slice";
 
 export default function Chatbot() {
@@ -29,7 +32,7 @@ export default function Chatbot() {
     Animated.Value[]
   >([]);
 
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
 
   const hideNoConvoHistoryAnim = useRef<Animated.Value>(
     new Animated.Value(1)
@@ -59,18 +62,13 @@ export default function Chatbot() {
           duration: 300,
           useNativeDriver: true,
         }).start(() => setShowNoConvo(false));
-        let animationTimeout = setTimeout(() => {
+        setTimeout(() => {
           Animated.timing(userChatAnimations[0], {
             toValue: 0,
             duration: 300,
             useNativeDriver: true,
           }).start();
         }, 300);
-        return () => {
-          if (animationTimeout) {
-            clearTimeout(animationTimeout);
-          }
-        };
       }
       Animated.timing(userChatAnimations[userChatAnimations.length - 1], {
         toValue: 0,
@@ -78,6 +76,9 @@ export default function Chatbot() {
         useNativeDriver: true,
       }).start();
     }
+    const interaction =
+      conversation.interactions[conversation.interactions.length - 1];
+    dispatch(fetchSystemResponse(interaction));
   }, [conversation.interactions.length]);
 
   const handleSubmit = () => {
