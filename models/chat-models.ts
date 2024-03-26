@@ -16,6 +16,7 @@ interface SystemChat {
 }
 
 interface Interaction {
+  id: number;
   userChat: UserChat;
   systemChat: SystemChat;
 }
@@ -24,4 +25,8 @@ interface Conversation {
   interactions: Interaction[];
 }
 
-export { UserChat, SystemChat, Interaction, Conversation };
+interface ChatClientResponse {
+  output_text: string;
+}
+
+export { UserChat, SystemChat, Interaction, Conversation, ChatClientResponse };
