@@ -1,40 +1,17 @@
-import {
-  View,
-  Text,
-  StyleSheet,
-  SafeAreaView,
-  ScrollView,
-  TextInput,
-  Pressable,
-  Animated,
-  NativeSyntheticEvent,
-  NativeScrollEvent,
-  Image,
-} from "react-native";
+import { View, StyleSheet, SafeAreaView, Animated } from "react-native";
 import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../redux/store";
 import NoConversationHistory from "./NoConversationHistory";
-import { Ionicons } from "@expo/vector-icons";
-import {
-  addUserChatMessage,
-  fetchSystemResponse,
-} from "../../redux/slices/chat-slice";
-import { setIsScreenScrolled } from "../../redux/slices/general-slice";
+import { fetchSystemResponse } from "../../redux/slices/chat-slice";
 import { isUserChat } from "../../models/chat-models";
+import Conversation from "./ChatbotConversation/Conversation";
+import InputField from "./input-field/InputField";
 
 export default function Chatbot() {
-  const scrollViewRef = useRef<ScrollView>(null);
-  const { conversation, pendingRequest } = useSelector(
-    (state: RootState) => state.chat
-  );
-  const [message, setMessage] = useState("");
+  const { conversation } = useSelector((state: RootState) => state.chat);
   const [showNoConvo, setShowNoConvo] = useState(conversation.length === 0);
   const [userChatAnimations, setUserChatAnimations] = useState<
-    Animated.Value[]
-  >([]);
-
-  const [systemChatAnimations, setSystemChatAnimations] = useState<
     Animated.Value[]
   >([]);
 
@@ -43,21 +20,6 @@ export default function Chatbot() {
   const hideNoConvoHistoryAnim = useRef<Animated.Value>(
     new Animated.Value(1)
   ).current;
-
-  const sendBackgroundAnim = useRef<Animated.Value>(
-    new Animated.Value(0)
-  ).current;
-  const backgroundColor = sendBackgroundAnim.interpolate({
-    inputRange: [0, 1],
-    outputRange: ["#272020", "#8E574C"],
-  });
-
-  const handleMicrophone = () => {};
-
-  const handleScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
-    const isScrolled = event.nativeEvent.contentOffset.y > 0;
-    dispatch(setIsScreenScrolled(isScrolled));
-  };
 
   useEffect(() => {
     setUserChatAnimations([...userChatAnimations, new Animated.Value(200)]);
@@ -98,19 +60,6 @@ export default function Chatbot() {
     // }
   }, [conversation.length]);
 
-  const handleSubmit = () => {
-    dispatch(addUserChatMessage(message));
-    setMessage("");
-  };
-
-  useEffect(() => {
-    Animated.timing(sendBackgroundAnim, {
-      toValue: message.trim() ? 1 : 0,
-      duration: 300,
-      useNativeDriver: false,
-    }).start();
-  }, [message]);
-
   return (
     <SafeAreaView style={styles.container}>
       <View style={{ flex: 1, width: "100%" }}>
@@ -126,69 +75,9 @@ export default function Chatbot() {
             <NoConversationHistory />
           </Animated.View>
         ) : (
-          <ScrollView
-            style={styles.scrollView}
-            ref={scrollViewRef}
-            onContentSizeChange={() =>
-              scrollViewRef.current?.scrollToEnd({ animated: true })
-            }
-            onScroll={handleScroll}
-            scrollEventThrottle={16}
-          >
-            {conversation.map((chat, index) => (
-              <React.Fragment key={index}>
-                {isUserChat(chat) ? (
-                  <View style={styles.userChatContainer}>
-                    <Text style={styles.userChatText}>{chat.message}</Text>
-                  </View>
-                ) : (
-                  <>
-                    {chat.metadata.status === "fulfilled" && (
-                      <View style={styles.systemChatContainer}>
-                        <Text style={styles.systemChatText}>
-                          {chat.message}
-                        </Text>
-                      </View>
-                    )}
-                  </>
-                )}
-              </React.Fragment>
-            ))}
-            {pendingRequest > 0 && (
-              <View style={styles.systemChatPendingContainer}>
-                <Image
-                  style={styles.loadingGif}
-                  source={require("../../assets/typing.gif")}
-                />
-              </View>
-            )}
-            <View style={{ padding: 35 }}></View>
-          </ScrollView>
+          <Conversation />
         )}
-        <View style={styles.inputContainer}>
-          <View style={styles.userInputContainer}>
-            <TextInput
-              editable
-              multiline
-              placeholder="What's on your mind?"
-              placeholderTextColor={"#DBC9C9"}
-              style={styles.textinput}
-              onChangeText={setMessage}
-              value={message}
-            />
-            <Pressable onPress={handleSubmit}>
-              <Animated.View
-                style={[styles.sendButtonContainer, { backgroundColor }]}
-              >
-                <Ionicons
-                  name={message.trim() ? "arrow-up" : "mic"}
-                  size={20}
-                  color={"white"}
-                />
-              </Animated.View>
-            </Pressable>
-          </View>
-        </View>
+        <InputField />
       </View>
     </SafeAreaView>
   );
@@ -201,88 +90,5 @@ const styles = StyleSheet.create({
     backgroundColor: "#3A2D2D",
     alignItems: "center",
     justifyContent: "flex-start",
-  },
-  userChatContainer: {
-    backgroundColor: "#8E574C",
-    maxWidth: "75%",
-    alignSelf: "flex-end",
-    borderTopLeftRadius: 25,
-    borderTopRightRadius: 25,
-    borderBottomLeftRadius: 25,
-    marginVertical: 16,
-  },
-  userChatText: {
-    fontSize: 16,
-    color: "white",
-    padding: 16,
-    fontWeight: "500",
-  },
-  systemChatContainer: {
-    backgroundColor: "#EEEEEE",
-    maxWidth: "75%",
-    alignSelf: "flex-start",
-    borderTopLeftRadius: 25,
-    borderTopRightRadius: 25,
-    borderBottomRightRadius: 25,
-    marginVertical: 16,
-  },
-  systemChatPendingContainer: {
-    backgroundColor: "#EEEEEE",
-    maxWidth: "75%",
-    alignSelf: "flex-start",
-    borderTopLeftRadius: 25,
-    borderTopRightRadius: 25,
-    borderBottomRightRadius: 25,
-    marginVertical: 16,
-  },
-  systemChatText: {
-    fontSize: 16,
-    color: "#505050",
-    padding: 16,
-    fontWeight: "500",
-  },
-  inputContainer: {
-    backgroundColor: "#3A2D2D",
-    width: "100%",
-    alignItems: "center",
-    justifyContent: "center",
-    padding: 8,
-    borderTopColor: "#A9A9A9",
-    borderTopWidth: 1,
-  },
-  userInputContainer: {
-    width: "100%",
-    flexDirection: "row",
-    borderWidth: 1,
-    borderColor: "#A9A9A9",
-    borderRadius: 10,
-    justifyContent: "center",
-    alignItems: "center",
-    padding: 8,
-  },
-  textinput: {
-    flex: 1,
-    fontSize: 16,
-    color: "white",
-  },
-  sendButtonContainer: {
-    width: 35,
-    height: 35,
-    marginLeft: 8,
-    backgroundColor: "#272020",
-    borderWidth: 1,
-    borderRadius: 30,
-    borderColor: "#A9A9A9",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  scrollView: {
-    padding: 16,
-    paddingTop: 70,
-  },
-  loadingGif: {
-    height: 30,
-    width: 40,
-    margin: 8,
   },
 });
