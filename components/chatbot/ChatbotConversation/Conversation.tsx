@@ -1,12 +1,11 @@
 import {
   View,
-  Text,
   StyleSheet,
   NativeSyntheticEvent,
   NativeScrollEvent,
-  Image,
+  Animated,
 } from "react-native";
-import React, { useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { ScrollView } from "react-native-gesture-handler";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../../redux/store";
@@ -15,9 +14,13 @@ import { isUserChat } from "../../../models/chat-models";
 import UserChat from "./UserChat";
 import SystemChat from "./SystemChat";
 import SystemChatPending from "./SystemChatPending";
+import { fetchSystemResponse } from "../../../redux/slices/chat-slice";
 
 export default function Conversation() {
   const { conversation } = useSelector((state: RootState) => state.chat);
+  const [userChatAnimations, setUserChatAnimations] = useState<
+    Animated.Value[]
+  >([]);
 
   const dispatch = useDispatch<AppDispatch>();
 
@@ -27,6 +30,16 @@ export default function Conversation() {
     const isScrolled = event.nativeEvent.contentOffset.y > 0;
     dispatch(setIsScreenScrolled(isScrolled));
   };
+
+  useEffect(() => {
+    console.log("adding animation");
+    setUserChatAnimations([...userChatAnimations, new Animated.Value(200)]);
+
+    const chatItem = conversation[conversation.length - 1];
+    if (isUserChat(chatItem)) {
+      dispatch(fetchSystemResponse(chatItem));
+    }
+  }, [conversation.length]);
 
   return (
     <ScrollView
@@ -41,7 +54,10 @@ export default function Conversation() {
       {conversation.map((chat, index) => (
         <React.Fragment key={index}>
           {isUserChat(chat) ? (
-            <UserChat message={chat.message!} />
+            <UserChat
+              message={chat.message!}
+              animation={userChatAnimations[index]}
+            />
           ) : (
             <>
               {chat.metadata.status === "fulfilled" && (

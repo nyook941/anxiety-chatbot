@@ -11,53 +11,20 @@ import InputField from "./input-field/InputField";
 export default function Chatbot() {
   const { conversation } = useSelector((state: RootState) => state.chat);
   const [showNoConvo, setShowNoConvo] = useState(conversation.length === 0);
-  const [userChatAnimations, setUserChatAnimations] = useState<
-    Animated.Value[]
-  >([]);
-
-  const dispatch = useDispatch<AppDispatch>();
 
   const hideNoConvoHistoryAnim = useRef<Animated.Value>(
     new Animated.Value(1)
   ).current;
 
   useEffect(() => {
-    setUserChatAnimations([...userChatAnimations, new Animated.Value(200)]);
-    if (userChatAnimations.length !== 0) {
-      if (userChatAnimations.length === 1) {
-        Animated.timing(hideNoConvoHistoryAnim, {
-          toValue: 0,
-          duration: 300,
-          useNativeDriver: true,
-        }).start(() => setShowNoConvo(false));
-        setTimeout(() => {
-          Animated.timing(userChatAnimations[0], {
-            toValue: 0,
-            duration: 300,
-            useNativeDriver: true,
-          }).start();
-        }, 300);
-      }
-      Animated.timing(userChatAnimations[userChatAnimations.length - 1], {
+    console.log("hiding no convo");
+    if (conversation.length === 0) {
+      Animated.timing(hideNoConvoHistoryAnim, {
         toValue: 0,
         duration: 300,
         useNativeDriver: true,
-      }).start();
+      }).start(() => setShowNoConvo(false));
     }
-
-    const chatItem = conversation[conversation.length - 1];
-    if (isUserChat(chatItem)) {
-      dispatch(fetchSystemResponse(chatItem));
-    }
-
-    // setSystemChatAnimations([...systemChatAnimations, new Animated.Value(200)]);
-    // if (systemChatAnimations.length !== 0) {
-    //   Animated.timing(systemChatAnimations[systemChatAnimations.length - 1], {
-    //     toValue: 0,
-    //     duration: 300,
-    //     useNativeDriver: true,
-    //   }).start();
-    // }
   }, [conversation.length]);
 
   return (

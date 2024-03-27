@@ -7,18 +7,26 @@ import {
   Animated,
 } from "react-native";
 import React, { useEffect, useRef, useState } from "react";
-import { useDispatch } from "react-redux";
-import { AppDispatch } from "../../../redux/store";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../../../redux/store";
 import { addUserChatMessage } from "../../../redux/slices/chat-slice";
 import { Ionicons } from "@expo/vector-icons";
 
 export default function InputField() {
   const dispatch = useDispatch<AppDispatch>();
   const [message, setMessage] = useState("");
+  const { conversation } = useSelector((state: RootState) => state.chat);
 
   const handleSubmit = () => {
-    dispatch(addUserChatMessage(message));
-    setMessage("");
+    if (conversation.length > 0) {
+      dispatch(addUserChatMessage(message));
+      setMessage("");
+    } else {
+      setTimeout(() => {
+        dispatch(addUserChatMessage(message));
+        setMessage("");
+      }, 300);
+    }
   };
 
   const sendBackgroundAnim = useRef<Animated.Value>(

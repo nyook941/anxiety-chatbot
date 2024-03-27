@@ -1,11 +1,35 @@
-import { View, Text, StyleSheet } from "react-native";
-import React from "react";
+import { View, Text, StyleSheet, Animated } from "react-native";
+import React, { useEffect } from "react";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../redux/store";
 
-export default function UserChat({ message }: { message: string }) {
+export default function UserChat({
+  message,
+  animation,
+}: {
+  message: string;
+  animation: Animated.Value;
+}) {
+  const { conversation } = useSelector((state: RootState) => state.chat);
+
+  useEffect(() => {
+    console.log("running user chat animation");
+    Animated.timing(animation, {
+      toValue: 0,
+      duration: 300,
+      useNativeDriver: true,
+    }).start();
+  }, [conversation.length]);
+
   return (
-    <View style={styles.userChatContainer}>
+    <Animated.View
+      style={[
+        styles.userChatContainer,
+        { transform: [{ translateX: animation }, { translateY: animation }] },
+      ]}
+    >
       <Text style={styles.userChatText}>{message}</Text>
-    </View>
+    </Animated.View>
   );
 }
 
