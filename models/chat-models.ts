@@ -5,26 +5,45 @@ interface Chat {
 
 interface UserChat extends Chat {
   metadata: {
-    sentDateTime: string;
+    sentDateTime: string | null;
     isSent: boolean;
   };
 }
 
 interface SystemChat extends Chat {
   metadata: {
-    recievedDateTime: string | null;
     returnedDateTime: string | null;
-    status: "pending" | "fullfilled" | "rejected" | null;
+    status: "fulfilled" | "rejected" | null;
     userChat: number;
   };
 }
 
 interface ChatInitialState {
   conversation: (UserChat | SystemChat)[];
+  pendingRequest: number;
 }
 
 interface ChatClientResponse {
   output_text: string;
 }
 
-export { UserChat, SystemChat, ChatInitialState, ChatClientResponse };
+function isSystemChat(
+  chatItem: UserChat | SystemChat | undefined
+): chatItem is SystemChat {
+  return !!chatItem && "metadata" in chatItem && "status" in chatItem.metadata;
+}
+
+function isUserChat(
+  chatItem: UserChat | SystemChat | undefined
+): chatItem is UserChat {
+  return !!chatItem && "metadata" in chatItem && "isSent" in chatItem.metadata;
+}
+
+export {
+  UserChat,
+  SystemChat,
+  ChatInitialState,
+  ChatClientResponse,
+  isSystemChat,
+  isUserChat,
+};

@@ -7,6 +7,8 @@ import {
 import {
   ChatClientResponse,
   ChatInitialState,
+  isSystemChat,
+  isUserChat,
   SystemChat,
   UserChat,
 } from "../../models/chat-models";
@@ -14,27 +16,15 @@ import { CHATBOT_API_URL, CHATBOT_API_KEY } from "@env";
 
 const initialState: ChatInitialState = {
   conversation: [],
+  pendingRequest: 0,
 };
-
-const addSystemChat = createAction<{ userId: number; systemId: number }>(
-  "chat/markInteractionAsPending"
-);
 
 export const fetchSystemResponse = createAsyncThunk(
   "chat/fetchSystemResponse",
-  async (
-    payload: { userChat: UserChat; conversation: (UserChat | SystemChat)[] },
-    { dispatch }
-  ) => {
-    dispatch(
-      addSystemChat({
-        userId: payload.userChat.id,
-        systemId: payload.conversation.length,
-      })
-    );
-    const baseUrl = CHATBOT_API_URL + "testing";
+  async (userChat: UserChat) => {
+    const baseUrl = CHATBOT_API_URL;
     const data = {
-      question: payload.userChat.message,
+      question: userChat.message,
     };
     const response = await fetch(baseUrl, {
       method: "PUT",
@@ -45,8 +35,7 @@ export const fetchSystemResponse = createAsyncThunk(
     });
     const systemResponse = (await response.json()) as ChatClientResponse;
     return {
-      userId: payload.userChat.id,
-      systemId: payload.conversation.length,
+      userId: userChat.id,
       systemResponse,
     };
   }
@@ -63,7 +52,7 @@ export const chatSlice = createSlice({
         message: action.payload,
         metadata: {
           sentDateTime: new Date().toISOString(),
-          isSent: false,
+          isSent: true,
         },
       };
       state.conversation.push(userChat);
@@ -71,24 +60,21 @@ export const chatSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(addSystemChat, (state, action) => {
+      .addCase(fetchSystemResponse.pending, (state) => {
+        state.pendingRequest++;
+      })
+      .addCase(fetchSystemResponse.fulfilled, (state, action) => {
         const systemChat: SystemChat = {
-          id: action.payload.systemId,
-          message: null,
+          id: state.conversation.length,
+          message: action.payload.systemResponse.output_text,
           metadata: {
-            recievedDateTime: new Date().toISOString(),
-            returnedDateTime: null,
-            status: "pending",
+            returnedDateTime: new Date().toISOString(),
+            status: "fulfilled",
             userChat: action.payload.userId,
           },
         };
         state.conversation.push(systemChat);
-      })
-      .addCase(fetchSystemResponse.fulfilled, (state, action) => {
-        state.conversation[action.payload.systemId].message =
-          action.payload.systemResponse.output_text;
-        state.conversation[action.payload.systemId].metadata?.status =
-          "fullfilled";
+        state.pendingRequest--;
       });
   },
 });

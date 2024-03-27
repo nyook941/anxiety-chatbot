@@ -21,14 +21,15 @@ import {
   fetchSystemResponse,
 } from "../../redux/slices/chat-slice";
 import { setIsScreenScrolled } from "../../redux/slices/general-slice";
+import { isUserChat } from "../../models/chat-models";
 
 export default function Chatbot() {
   const scrollViewRef = useRef<ScrollView>(null);
-  const conversation = useSelector((state: RootState) => state.chat);
-  const [message, setMessage] = useState("");
-  const [showNoConvo, setShowNoConvo] = useState(
-    conversation.interactions.length === 0
+  const { conversation, pendingRequest } = useSelector(
+    (state: RootState) => state.chat
   );
+  const [message, setMessage] = useState("");
+  const [showNoConvo, setShowNoConvo] = useState(conversation.length === 0);
   const [userChatAnimations, setUserChatAnimations] = useState<
     Animated.Value[]
   >([]);
@@ -82,9 +83,10 @@ export default function Chatbot() {
       }).start();
     }
 
-    const interaction =
-      conversation.interactions[conversation.interactions.length - 1];
-    dispatch(fetchSystemResponse(interaction));
+    const chatItem = conversation[conversation.length - 1];
+    if (isUserChat(chatItem)) {
+      dispatch(fetchSystemResponse(chatItem));
+    }
 
     // setSystemChatAnimations([...systemChatAnimations, new Animated.Value(200)]);
     // if (systemChatAnimations.length !== 0) {
@@ -94,7 +96,7 @@ export default function Chatbot() {
     //     useNativeDriver: true,
     //   }).start();
     // }
-  }, [conversation.interactions.length]);
+  }, [conversation.length]);
 
   const handleSubmit = () => {
     dispatch(addUserChatMessage(message));
@@ -133,44 +135,33 @@ export default function Chatbot() {
             onScroll={handleScroll}
             scrollEventThrottle={16}
           >
-            {conversation.interactions.map((interaction, index) => (
+            {conversation.map((chat, index) => (
               <React.Fragment key={index}>
-                <Animated.View
-                  style={[
-                    styles.userChatContainer,
-                    {
-                      transform: [
-                        { translateY: userChatAnimations[index] },
-                        { translateX: userChatAnimations[index] },
-                      ],
-                    },
-                  ]}
-                >
-                  <Text style={styles.userChatText}>
-                    {interaction.userChat.message}
-                  </Text>
-                </Animated.View>
-                {interaction.systemChat.metadata.status === "pending" ? (
-                  <View style={styles.systemChatPendingContainer}>
-                    <Image
-                      style={styles.loadingGif}
-                      source={require("../../assets/typing.gif")}
-                      resizeMode="contain"
-                    />
-                  </View>
-                ) : interaction.systemChat.metadata.status === "fullfilled" ? (
-                  <View style={styles.systemChatContainer}>
-                    <Text style={styles.systemChatText}>
-                      {interaction.systemChat.message}
-                    </Text>
+                {isUserChat(chat) ? (
+                  <View style={styles.userChatContainer}>
+                    <Text style={styles.userChatText}>{chat.message}</Text>
                   </View>
                 ) : (
-                  <View style={styles.systemChatContainer}>
-                    <Text style={styles.systemChatText}>failed to send</Text>
-                  </View>
+                  <>
+                    {chat.metadata.status === "fulfilled" && (
+                      <View style={styles.systemChatContainer}>
+                        <Text style={styles.systemChatText}>
+                          {chat.message}
+                        </Text>
+                      </View>
+                    )}
+                  </>
                 )}
               </React.Fragment>
             ))}
+            {pendingRequest > 0 && (
+              <View style={styles.systemChatPendingContainer}>
+                <Image
+                  style={styles.loadingGif}
+                  source={require("../../assets/typing.gif")}
+                />
+              </View>
+            )}
             <View style={{ padding: 35 }}></View>
           </ScrollView>
         )}
