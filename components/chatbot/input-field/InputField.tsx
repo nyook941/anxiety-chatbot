@@ -1,11 +1,4 @@
-import {
-  View,
-  Text,
-  StyleSheet,
-  TextInput,
-  Pressable,
-  Animated,
-} from "react-native";
+import { View, StyleSheet, TextInput, Pressable, Animated } from "react-native";
 import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../../redux/store";
@@ -18,6 +11,7 @@ export default function InputField() {
   const { conversation } = useSelector((state: RootState) => state.chat);
 
   const handleSubmit = () => {
+    console.log(conversation.length);
     if (conversation.length > 0) {
       dispatch(addUserChatMessage(message));
       setMessage("");

@@ -1,31 +1,36 @@
-import { View, Text, StyleSheet, Animated } from "react-native";
-import React, { useEffect } from "react";
-import { useSelector } from "react-redux";
-import { RootState } from "../../../redux/store";
+import { Text, StyleSheet, Animated } from "react-native";
+import React, { useEffect, useRef } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../../../redux/store";
+import { isUserChat } from "../../../models/chat-models";
+import { fetchSystemResponse } from "../../../redux/slices/chat-slice";
 
-export default function UserChat({
-  message,
-  animation,
-}: {
-  message: string;
-  animation: Animated.Value;
-}) {
+export default function UserChat({ message }: { message: string }) {
   const { conversation } = useSelector((state: RootState) => state.chat);
+  const slideAnim = useRef<Animated.Value>(new Animated.Value(200)).current;
+
+  const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
-    console.log("running user chat animation");
-    Animated.timing(animation, {
+    Animated.timing(slideAnim, {
       toValue: 0,
       duration: 300,
       useNativeDriver: true,
     }).start();
+
+    const chatItem = conversation[conversation.length - 1];
+    console.log(chatItem);
+    console.log(isUserChat(chatItem));
+    if (isUserChat(chatItem)) {
+      dispatch(fetchSystemResponse(chatItem));
+    }
   }, [conversation.length]);
 
   return (
     <Animated.View
       style={[
         styles.userChatContainer,
-        { transform: [{ translateX: animation }, { translateY: animation }] },
+        { transform: [{ translateX: slideAnim }, { translateY: slideAnim }] },
       ]}
     >
       <Text style={styles.userChatText}>{message}</Text>

@@ -18,9 +18,6 @@ import { fetchSystemResponse } from "../../../redux/slices/chat-slice";
 
 export default function Conversation() {
   const { conversation } = useSelector((state: RootState) => state.chat);
-  const [userChatAnimations, setUserChatAnimations] = useState<
-    Animated.Value[]
-  >([]);
 
   const dispatch = useDispatch<AppDispatch>();
 
@@ -30,16 +27,6 @@ export default function Conversation() {
     const isScrolled = event.nativeEvent.contentOffset.y > 0;
     dispatch(setIsScreenScrolled(isScrolled));
   };
-
-  useEffect(() => {
-    console.log("adding animation");
-    setUserChatAnimations([...userChatAnimations, new Animated.Value(200)]);
-
-    const chatItem = conversation[conversation.length - 1];
-    if (isUserChat(chatItem)) {
-      dispatch(fetchSystemResponse(chatItem));
-    }
-  }, [conversation.length]);
 
   return (
     <ScrollView
@@ -54,10 +41,7 @@ export default function Conversation() {
       {conversation.map((chat, index) => (
         <React.Fragment key={index}>
           {isUserChat(chat) ? (
-            <UserChat
-              message={chat.message!}
-              animation={userChatAnimations[index]}
-            />
+            <UserChat message={chat.message!} />
           ) : (
             <>
               {chat.metadata.status === "fulfilled" && (

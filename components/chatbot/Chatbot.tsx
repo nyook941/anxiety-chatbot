@@ -17,8 +17,8 @@ export default function Chatbot() {
   ).current;
 
   useEffect(() => {
-    console.log("hiding no convo");
-    if (conversation.length === 0) {
+    if (conversation.length === 1) {
+      console.log("hiding no convo");
       Animated.timing(hideNoConvoHistoryAnim, {
         toValue: 0,
         duration: 300,
