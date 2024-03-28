@@ -11,19 +11,21 @@ export default function SystemChatComponent({ chat }: { chat: SystemChat }) {
   const xSlideAnim = useRef<Animated.Value>(new Animated.Value(-200)).current;
 
   useEffect(() => {
-    Animated.parallel([
-      Animated.timing(xSlideAnim, {
-        toValue: 0,
-        duration: 300,
-        useNativeDriver: true,
-      }),
-      Animated.timing(ySlideAnim, {
-        toValue: 0,
-        duration: 300,
-        useNativeDriver: true,
-      }),
-    ]).start();
-  }, [conversation.length]);
+    setTimeout(() => {
+      Animated.parallel([
+        Animated.timing(xSlideAnim, {
+          toValue: 0,
+          duration: 150,
+          useNativeDriver: true,
+        }),
+        Animated.timing(ySlideAnim, {
+          toValue: 0,
+          duration: 150,
+          useNativeDriver: true,
+        }),
+      ]).start();
+    }, 200);
+  }, [chat.metadata.status === "fulfilled"]);
 
   return (
     <Animated.View

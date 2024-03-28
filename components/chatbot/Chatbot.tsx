@@ -1,10 +1,8 @@
 import { View, StyleSheet, SafeAreaView, Animated } from "react-native";
 import React, { useEffect, useRef, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch, RootState } from "../../redux/store";
+import { useSelector } from "react-redux";
+import { RootState } from "../../redux/store";
 import NoConversationHistory from "./NoConversationHistory";
-import { fetchSystemResponse } from "../../redux/slices/chat-slice";
-import { isUserChat } from "../../models/chat-models";
 import Conversation from "./ChatbotConversation/Conversation";
 import InputField from "./input-field/InputField";
 
@@ -17,6 +15,7 @@ export default function Chatbot() {
   ).current;
 
   useEffect(() => {
+    console.log("running hide no convo");
     if (conversation.length === 1) {
       Animated.timing(hideNoConvoHistoryAnim, {
         toValue: 0,
@@ -24,7 +23,7 @@ export default function Chatbot() {
         useNativeDriver: true,
       }).start(() => setShowNoConvo(false));
     }
-  }, [conversation.length]);
+  }, [conversation.length === 1]);
 
   return (
     <SafeAreaView style={styles.container}>

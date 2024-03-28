@@ -7,6 +7,7 @@ import {
 import {
   ChatClientResponse,
   ChatInitialState,
+  isUserChat,
   SystemChat,
   UserChat,
 } from "../../models/chat-models";
@@ -20,7 +21,8 @@ const initialState: ChatInitialState = {
 export const fetchSystemResponse = createAsyncThunk(
   "chat/fetchSystemResponse",
   async (userChat: UserChat) => {
-    const baseUrl = CHATBOT_API_URL + "testing";
+    console.log(process.env.CHATBOT_API_URL);
+    const baseUrl = CHATBOT_API_URL;
     const data = {
       question: userChat.message,
     };
@@ -32,6 +34,7 @@ export const fetchSystemResponse = createAsyncThunk(
       body: JSON.stringify(data),
     });
     const systemResponse = (await response.json()) as ChatClientResponse;
+    console.log(systemResponse);
     return {
       userId: userChat.id,
       systemResponse,
@@ -46,14 +49,19 @@ export const chatSlice = createSlice({
     addUserChatMessage: (state, action: PayloadAction<string>) => {
       const userChat: UserChat = {
         id: state.conversation.length,
-
         message: action.payload,
         metadata: {
           sentDateTime: new Date().toISOString(),
-          isSent: true,
+          isSent: false,
         },
       };
       state.conversation.push(userChat);
+    },
+    setUserChatToSent: (state, action: PayloadAction<UserChat>) => {
+      const chatItem = state.conversation[action.payload.id];
+      if (isUserChat(chatItem)) {
+        chatItem.metadata.isSent = true;
+      }
     },
   },
   extraReducers: (builder) => {
@@ -77,6 +85,6 @@ export const chatSlice = createSlice({
   },
 });
 
-export const { addUserChatMessage } = chatSlice.actions;
+export const { addUserChatMessage, setUserChatToSent } = chatSlice.actions;
 
 export default chatSlice.reducer;

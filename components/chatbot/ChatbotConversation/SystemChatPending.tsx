@@ -4,44 +4,41 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../../redux/store";
 
 export default function SystemChatPending() {
-  const { pendingRequest } = useSelector((state: RootState) => state.chat);
+  const { pendingRequest, conversation } = useSelector(
+    (state: RootState) => state.chat
+  );
   const [isPending, setIsPending] = useState<boolean>(true);
 
   const ySlideAnim = useRef<Animated.Value>(new Animated.Value(200)).current;
   const xSlideAnim = useRef<Animated.Value>(new Animated.Value(-200)).current;
 
-  console.log("isPending", isPending);
-
   useEffect(() => {
-    if (pendingRequest > 0) {
-      console.log("showing animation");
+    if (pendingRequest > 0 || conversation.length === 1) {
       setIsPending(true);
       setTimeout(() => {
         Animated.parallel([
           Animated.timing(xSlideAnim, {
             toValue: 0,
-            duration: 300,
+            duration: 150,
             useNativeDriver: true,
           }),
           Animated.timing(ySlideAnim, {
             toValue: 0,
-            duration: 300,
+            duration: 150,
             useNativeDriver: true,
           }),
         ]).start();
       }, 500);
     } else {
-      console.log("hiding animation");
-      console.log(pendingRequest);
       Animated.parallel([
         Animated.timing(xSlideAnim, {
           toValue: -200,
-          duration: 500,
+          duration: 150,
           useNativeDriver: true,
         }),
         Animated.timing(ySlideAnim, {
           toValue: 200,
-          duration: 500,
+          duration: 150,
           useNativeDriver: true,
         }),
       ]).start(() => setIsPending(false));

@@ -3,7 +3,10 @@ import React, { useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../../redux/store";
 import { UserChat, isUserChat } from "../../../models/chat-models";
-import { fetchSystemResponse } from "../../../redux/slices/chat-slice";
+import {
+  fetchSystemResponse,
+  setUserChatToSent,
+} from "../../../redux/slices/chat-slice";
 
 export default function UserChatComponent({ chat }: { chat: UserChat }) {
   const { conversation } = useSelector((state: RootState) => state.chat);
@@ -12,17 +15,18 @@ export default function UserChatComponent({ chat }: { chat: UserChat }) {
   const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
-    const chatItem = conversation[conversation.length - 1];
-    if (isUserChat(chatItem)) {
+    console.log("userchat useeffect running for userChat", chat.id);
+    const chatItem = conversation[chat.id];
+    if (isUserChat(chatItem) && !chatItem.metadata.isSent) {
+      dispatch(setUserChatToSent(chatItem));
       dispatch(fetchSystemResponse(chatItem));
     }
-
     Animated.timing(slideAnim, {
       toValue: 0,
-      duration: 300,
+      duration: 150,
       useNativeDriver: true,
     }).start();
-  }, [conversation.length]);
+  }, [chat.metadata.isSent]);
 
   return (
     <Animated.View

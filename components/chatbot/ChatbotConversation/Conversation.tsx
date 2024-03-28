@@ -51,7 +51,6 @@ export default function Conversation() {
         </React.Fragment>
       ))}
       <SystemChatPending />
-      <View style={{ padding: 35 }}></View>
     </ScrollView>
   );
 }

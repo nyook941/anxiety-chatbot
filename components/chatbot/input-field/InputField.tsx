@@ -2,8 +2,13 @@ import { View, StyleSheet, TextInput, Pressable, Animated } from "react-native";
 import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../../redux/store";
-import { addUserChatMessage } from "../../../redux/slices/chat-slice";
+import {
+  addUserChatMessage,
+  fetchSystemResponse,
+  setUserChatToSent,
+} from "../../../redux/slices/chat-slice";
 import { Ionicons } from "@expo/vector-icons";
+import { isUserChat } from "../../../models/chat-models";
 
 export default function InputField() {
   const dispatch = useDispatch<AppDispatch>();
@@ -22,6 +27,8 @@ export default function InputField() {
     }
   };
 
+  const handleMic = () => {};
+
   const sendBackgroundAnim = useRef<Animated.Value>(
     new Animated.Value(0)
   ).current;
@@ -33,7 +40,7 @@ export default function InputField() {
   useEffect(() => {
     Animated.timing(sendBackgroundAnim, {
       toValue: message.trim() ? 1 : 0,
-      duration: 300,
+      duration: 150,
       useNativeDriver: false,
     }).start();
   }, [message]);
@@ -50,7 +57,7 @@ export default function InputField() {
           onChangeText={setMessage}
           value={message}
         />
-        <Pressable onPress={handleSubmit}>
+        <Pressable onPress={message.trim() ? handleSubmit : handleMic}>
           <Animated.View
             style={[styles.sendButtonContainer, { backgroundColor }]}
           >
