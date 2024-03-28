@@ -1,32 +1,49 @@
-interface UserChat {
-  message: string;
+interface Chat {
+  id: number;
+  message: string | null;
+}
+
+interface UserChat extends Chat {
   metadata: {
-    sentDateTime: string;
+    sentDateTime: string | null;
     isSent: boolean;
   };
 }
 
-interface SystemChat {
-  message: string | null;
+interface SystemChat extends Chat {
   metadata: {
-    recievedDateTime: string | null;
     returnedDateTime: string | null;
-    status: "pending" | "fullfilled" | "rejected" | null;
+    status: "fulfilled" | "rejected" | null;
+    userChat: number;
   };
 }
 
-interface Interaction {
-  id: number;
-  userChat: UserChat;
-  systemChat: SystemChat;
-}
-
-interface Conversation {
-  interactions: Interaction[];
+interface ChatInitialState {
+  conversation: (UserChat | SystemChat)[];
+  pendingRequest: number;
 }
 
 interface ChatClientResponse {
   output_text: string;
 }
 
-export { UserChat, SystemChat, Interaction, Conversation, ChatClientResponse };
+function isSystemChat(
+  chatItem: UserChat | SystemChat | undefined
+): chatItem is SystemChat {
+  return !!chatItem && "metadata" in chatItem && "status" in chatItem.metadata;
+}
+
+function isUserChat(
+  chatItem: UserChat | SystemChat | undefined
+): chatItem is UserChat {
+  return !!chatItem && "metadata" in chatItem && "isSent" in chatItem.metadata;
+}
+
+export {
+  UserChat,
+  SystemChat,
+  ChatInitialState,
+  ChatClientResponse,
+  isSystemChat,
+  isUserChat,
+};
