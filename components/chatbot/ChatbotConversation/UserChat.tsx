@@ -12,18 +12,16 @@ export default function UserChatComponent({ chat }: { chat: UserChat }) {
   const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
+    const chatItem = conversation[conversation.length - 1];
+    if (isUserChat(chatItem)) {
+      dispatch(fetchSystemResponse(chatItem));
+    }
+
     Animated.timing(slideAnim, {
       toValue: 0,
       duration: 300,
       useNativeDriver: true,
     }).start();
-
-    const chatItem = conversation[conversation.length - 1];
-    console.log(chatItem);
-    console.log(isUserChat(chatItem));
-    if (isUserChat(chatItem)) {
-      dispatch(fetchSystemResponse(chatItem));
-    }
   }, [conversation.length]);
 
   return (

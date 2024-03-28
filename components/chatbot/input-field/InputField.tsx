@@ -11,7 +11,6 @@ export default function InputField() {
   const { conversation } = useSelector((state: RootState) => state.chat);
 
   const handleSubmit = () => {
-    console.log(conversation.length);
     if (conversation.length > 0) {
       dispatch(addUserChatMessage(message));
       setMessage("");

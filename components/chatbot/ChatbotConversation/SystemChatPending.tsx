@@ -1,20 +1,72 @@
-import { View, Text, StyleSheet, Image } from "react-native";
-import React from "react";
+import { StyleSheet, Image, Animated } from "react-native";
+import React, { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../redux/store";
 
 export default function SystemChatPending() {
   const { pendingRequest } = useSelector((state: RootState) => state.chat);
+  const [isPending, setIsPending] = useState<boolean>(true);
+
+  const ySlideAnim = useRef<Animated.Value>(new Animated.Value(200)).current;
+  const xSlideAnim = useRef<Animated.Value>(new Animated.Value(-200)).current;
+
+  console.log("isPending", isPending);
+
+  useEffect(() => {
+    if (pendingRequest > 0) {
+      console.log("showing animation");
+      setIsPending(true);
+      setTimeout(() => {
+        Animated.parallel([
+          Animated.timing(xSlideAnim, {
+            toValue: 0,
+            duration: 300,
+            useNativeDriver: true,
+          }),
+          Animated.timing(ySlideAnim, {
+            toValue: 0,
+            duration: 300,
+            useNativeDriver: true,
+          }),
+        ]).start();
+      }, 500);
+    } else {
+      console.log("hiding animation");
+      console.log(pendingRequest);
+      Animated.parallel([
+        Animated.timing(xSlideAnim, {
+          toValue: -200,
+          duration: 500,
+          useNativeDriver: true,
+        }),
+        Animated.timing(ySlideAnim, {
+          toValue: 200,
+          duration: 500,
+          useNativeDriver: true,
+        }),
+      ]).start(() => setIsPending(false));
+    }
+  }, [pendingRequest]);
 
   return (
     <>
-      {pendingRequest > 0 && (
-        <View style={styles.systemChatPendingContainer}>
+      {isPending && (
+        <Animated.View
+          style={[
+            styles.systemChatPendingContainer,
+            {
+              transform: [
+                { translateX: xSlideAnim },
+                { translateY: ySlideAnim },
+              ],
+            },
+          ]}
+        >
           <Image
             style={styles.loadingGif}
             source={require("../../../assets/typing.gif")}
           />
-        </View>
+        </Animated.View>
       )}
     </>
   );
