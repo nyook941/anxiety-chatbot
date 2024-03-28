@@ -11,10 +11,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../../redux/store";
 import { setIsScreenScrolled } from "../../../redux/slices/general-slice";
 import { isUserChat } from "../../../models/chat-models";
-import UserChat from "./UserChat";
-import SystemChat from "./SystemChat";
 import SystemChatPending from "./SystemChatPending";
-import { fetchSystemResponse } from "../../../redux/slices/chat-slice";
+import UserChatComponent from "./UserChat";
+import SystemChatComponent from "./SystemChat";
 
 export default function Conversation() {
   const { conversation } = useSelector((state: RootState) => state.chat);
@@ -41,15 +40,11 @@ export default function Conversation() {
       {conversation.map((chat, index) => (
         <React.Fragment key={index}>
           {isUserChat(chat) ? (
-            <UserChat message={chat.message!} />
+            <UserChatComponent chat={chat} />
           ) : (
             <>
               {chat.metadata.status === "fulfilled" && (
-                <SystemChat
-                  message={
-                    chat.message ?? "An error occured. Please try again later."
-                  }
-                />
+                <SystemChatComponent chat={chat} />
               )}
             </>
           )}

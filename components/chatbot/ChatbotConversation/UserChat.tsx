@@ -2,10 +2,10 @@ import { Text, StyleSheet, Animated } from "react-native";
 import React, { useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../../redux/store";
-import { isUserChat } from "../../../models/chat-models";
+import { UserChat, isUserChat } from "../../../models/chat-models";
 import { fetchSystemResponse } from "../../../redux/slices/chat-slice";
 
-export default function UserChat({ message }: { message: string }) {
+export default function UserChatComponent({ chat }: { chat: UserChat }) {
   const { conversation } = useSelector((state: RootState) => state.chat);
   const slideAnim = useRef<Animated.Value>(new Animated.Value(200)).current;
 
@@ -33,7 +33,7 @@ export default function UserChat({ message }: { message: string }) {
         { transform: [{ translateX: slideAnim }, { translateY: slideAnim }] },
       ]}
     >
-      <Text style={styles.userChatText}>{message}</Text>
+      <Text style={styles.userChatText}>{chat.message}</Text>
     </Animated.View>
   );
 }

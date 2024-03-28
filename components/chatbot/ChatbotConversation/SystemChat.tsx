@@ -1,11 +1,39 @@
-import { View, Text, StyleSheet } from "react-native";
-import React from "react";
+import { Text, StyleSheet, Animated } from "react-native";
+import React, { useEffect, useRef } from "react";
+import { SystemChat } from "../../../models/chat-models";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../redux/store";
 
-export default function SystemChat({ message }: { message: string }) {
+export default function SystemChatComponent({ chat }: { chat: SystemChat }) {
+  const { conversation } = useSelector((state: RootState) => state.chat);
+
+  const ySlideAnim = useRef<Animated.Value>(new Animated.Value(200)).current;
+  const xSlideAnim = useRef<Animated.Value>(new Animated.Value(-200)).current;
+
+  useEffect(() => {
+    Animated.parallel([
+      Animated.timing(xSlideAnim, {
+        toValue: 0,
+        duration: 300,
+        useNativeDriver: true,
+      }),
+      Animated.timing(ySlideAnim, {
+        toValue: 0,
+        duration: 300,
+        useNativeDriver: true,
+      }),
+    ]).start();
+  }, [conversation.length]);
+
   return (
-    <View style={styles.systemChatContainer}>
-      <Text style={styles.systemChatText}>{message}</Text>
-    </View>
+    <Animated.View
+      style={[
+        styles.systemChatContainer,
+        { transform: [{ translateX: xSlideAnim }, { translateY: ySlideAnim }] },
+      ]}
+    >
+      <Text style={styles.systemChatText}>{chat.message}</Text>
+    </Animated.View>
   );
 }
 

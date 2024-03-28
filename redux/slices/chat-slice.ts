@@ -22,7 +22,7 @@ const initialState: ChatInitialState = {
 export const fetchSystemResponse = createAsyncThunk(
   "chat/fetchSystemResponse",
   async (userChat: UserChat) => {
-    const baseUrl = CHATBOT_API_URL + "testing";
+    const baseUrl = CHATBOT_API_URL + "test";
     const data = {
       question: userChat.message,
     };
