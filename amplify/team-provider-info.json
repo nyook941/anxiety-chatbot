@@ -1,0 +1,15 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-anxietychatbot-dev-113431-authRole",
+      "UnauthRoleArn": "arn:aws:iam::211125622513:role/amplify-anxietychatbot-dev-113431-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::211125622513:role/amplify-anxietychatbot-dev-113431-authRole",
+      "Region": "us-east-2",
+      "DeploymentBucketName": "amplify-anxietychatbot-dev-113431-deployment",
+      "UnauthRoleName": "amplify-anxietychatbot-dev-113431-unauthRole",
+      "StackName": "amplify-anxietychatbot-dev-113431",
+      "StackId": "arn:aws:cloudformation:us-east-2:211125622513:stack/amplify-anxietychatbot-dev-113431/07d72cf0-ed21-11ee-99c8-02e65e732185",
+      "AmplifyAppId": "d2tk1vgd03c8rl"
+    }
+  }
+}

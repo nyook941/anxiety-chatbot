@@ -5,6 +5,9 @@ import React, { useEffect } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import DrawerNavigation from "./navigation/Drawer";
 import { MoodDiaryService } from "./components/mood-diary/MoodDiaryServices";
+import { Amplify } from "aws-amplify";
+import amplifyconfig from "./src/amplifyconfiguration.json";
+Amplify.configure(amplifyconfig);
 
 export default function App() {
   useEffect(() => {
