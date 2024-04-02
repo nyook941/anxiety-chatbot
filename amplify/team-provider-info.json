@@ -1,15 +1,21 @@
 {
   "dev": {
     "awscloudformation": {
-      "AuthRoleName": "amplify-anxietychatbot-dev-113431-authRole",
-      "UnauthRoleArn": "arn:aws:iam::211125622513:role/amplify-anxietychatbot-dev-113431-unauthRole",
-      "AuthRoleArn": "arn:aws:iam::211125622513:role/amplify-anxietychatbot-dev-113431-authRole",
+      "AuthRoleName": "amplify-anxietychatbot-dev-210926-authRole",
+      "UnauthRoleArn": "arn:aws:iam::211125622513:role/amplify-anxietychatbot-dev-210926-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::211125622513:role/amplify-anxietychatbot-dev-210926-authRole",
       "Region": "us-east-2",
-      "DeploymentBucketName": "amplify-anxietychatbot-dev-113431-deployment",
-      "UnauthRoleName": "amplify-anxietychatbot-dev-113431-unauthRole",
-      "StackName": "amplify-anxietychatbot-dev-113431",
-      "StackId": "arn:aws:cloudformation:us-east-2:211125622513:stack/amplify-anxietychatbot-dev-113431/07d72cf0-ed21-11ee-99c8-02e65e732185",
-      "AmplifyAppId": "d2tk1vgd03c8rl"
+      "DeploymentBucketName": "amplify-anxietychatbot-dev-210926-deployment",
+      "UnauthRoleName": "amplify-anxietychatbot-dev-210926-unauthRole",
+      "StackName": "amplify-anxietychatbot-dev-210926",
+      "StackId": "arn:aws:cloudformation:us-east-2:211125622513:stack/amplify-anxietychatbot-dev-210926/ff38a600-f095-11ee-aa34-0ad1adb782a5",
+      "AmplifyAppId": "de2wlxx2pdw80"
+    },
+    "categories": {
+      "auth": {
+        "anxietychatbot62f2a803": {},
+        "anxietychatbot": {}
+      }
     }
   }
 }
