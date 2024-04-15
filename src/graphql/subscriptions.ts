@@ -13,7 +13,7 @@ export const onCreateUser = /* GraphQL */ `subscription OnCreateUser($filter: Mo
     id
     username
     email
-    age
+    dob
     createdAt
     updatedAt
     __typename
@@ -28,7 +28,7 @@ export const onUpdateUser = /* GraphQL */ `subscription OnUpdateUser($filter: Mo
     id
     username
     email
-    age
+    dob
     createdAt
     updatedAt
     __typename
@@ -43,7 +43,7 @@ export const onDeleteUser = /* GraphQL */ `subscription OnDeleteUser($filter: Mo
     id
     username
     email
-    age
+    dob
     createdAt
     updatedAt
     __typename

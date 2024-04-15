@@ -13,7 +13,7 @@ export const getUser = /* GraphQL */ `query GetUser($id: ID!) {
     id
     username
     email
-    age
+    dob
     createdAt
     updatedAt
     __typename
@@ -30,7 +30,7 @@ export const listUsers = /* GraphQL */ `query ListUsers(
       id
       username
       email
-      age
+      dob
       createdAt
       updatedAt
       __typename

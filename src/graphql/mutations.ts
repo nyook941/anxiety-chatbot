@@ -16,7 +16,7 @@ export const createUser = /* GraphQL */ `mutation CreateUser(
     id
     username
     email
-    age
+    dob
     createdAt
     updatedAt
     __typename
@@ -34,7 +34,7 @@ export const updateUser = /* GraphQL */ `mutation UpdateUser(
     id
     username
     email
-    age
+    dob
     createdAt
     updatedAt
     __typename
@@ -52,7 +52,7 @@ export const deleteUser = /* GraphQL */ `mutation DeleteUser(
     id
     username
     email
-    age
+    dob
     createdAt
     updatedAt
     __typename
