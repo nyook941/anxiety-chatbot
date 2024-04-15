@@ -32,7 +32,16 @@ export const postUserSignInData = createAsyncThunk(
           })
         );
       }
-      // return user[0];
+      const userResponse = user[0];
+      return {
+        id: userResponse.id,
+        username: userResponse.username,
+        email: userResponse.email,
+        birthdate: userResponse.birthdate,
+        gender: userResponse.gender,
+        createdAt: userResponse.createdAt,
+        updatedAt: userResponse.updatedAt,
+      } as User;
     } catch (error) {
       console.log("there was an error saving post\n", error);
     }
@@ -44,7 +53,9 @@ export const userSlice = createSlice({
   initialState,
   reducers: {},
   extraReducers: (builder) => {
-    builder.addCase(postUserSignInData.fulfilled, (state, action) => {});
+    builder.addCase(postUserSignInData.fulfilled, (state, action) => {
+      state.user = action.payload;
+    });
   },
 });
 
