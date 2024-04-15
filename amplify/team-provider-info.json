@@ -15,6 +15,9 @@
       "auth": {
         "anxietychatbot62f2a803": {},
         "anxietychatbot": {}
+      },
+      "api": {
+        "anxietychatbot": {}
       }
     }
   }
