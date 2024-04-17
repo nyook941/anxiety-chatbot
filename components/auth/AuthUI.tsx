@@ -2,11 +2,23 @@ import { View, Text, StyleSheet, Platform } from "react-native";
 import React from "react";
 import SignUp from "./SignUp";
 
-export default function AuthUI() {
+export default function AuthUI({
+  type,
+}: {
+  type: "Sign Up" | "Sign In" | "Forgot Password" | "Enter Code";
+}) {
   return (
     <View style={styles.background}>
-      <Text style={styles.title}>Sign Up</Text>
-      <Text style={styles.subtitle}>Please sign up to continue</Text>
+      <Text style={styles.title}>{type}</Text>
+      <Text style={styles.subtitle}>
+        Please{" "}
+        {type === "Forgot Password"
+          ? "enter your email"
+          : type === "Enter Code"
+          ? "enter the code sent to your email"
+          : type.toLowerCase()}{" "}
+        to continue
+      </Text>
       <View style={[styles.container, styles.boxShadow]}>
         <SignUp />
       </View>
