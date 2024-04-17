@@ -1,31 +1,24 @@
-import {
-  Text,
-  StyleSheet,
-  TextInput,
-  KeyboardAvoidingView,
-  View,
-  Pressable,
-  Platform,
-} from "react-native";
+import { View, Text, Pressable, StyleSheet, Platform } from "react-native";
 import React from "react";
-import ActionCluster from "./general-components/ActionCluster";
 import { InputTitlePlaceholder } from "../../models/general-models";
 import InputCluster from "./general-components/InputCluster";
+import ActionCluster from "./general-components/ActionCluster";
 
-export default function SignUp() {
+export default function SignIn() {
   const inputArr = [
     { title: "Username", placeHolder: "John Doe" },
-    { title: "Email", placeHolder: "johndoe@gmail.com" },
     { title: "Password", placeHolder: "8 characters or more" },
-    { title: "Confirm Password", placeHolder: "re-enter your password" },
   ] as InputTitlePlaceholder[];
 
   return (
     <>
       <View style={[styles.mainContainer, styles.boxShadow]}>
         <InputCluster inputArr={inputArr} />
-        <ActionCluster title={"Sign Up"} />
+        <ActionCluster title={"Log In"} />
       </View>
+      <Pressable style={styles.container}>
+        <Text style={styles.logIn}>Forgot Password?</Text>
+      </Pressable>
       <Pressable style={styles.signInContainer}>
         <Text style={styles.subtitle}>Already have an account?</Text>
         <Text style={styles.logIn}>Sign In</Text>
@@ -36,9 +29,20 @@ export default function SignUp() {
 
 const styles = StyleSheet.create({
   container: {
+    flexDirection: "row",
+    marginTop: 8,
+    zIndex: 1,
+    justifyContent: "center",
+    width: "85%",
+  },
+  signInContainer: {
+    zIndex: 1,
     justifyContent: "center",
     alignItems: "center",
-    marginTop: 16,
+    width: "85%",
+    position: "absolute",
+    flexDirection: "row",
+    bottom: 40,
   },
   subtitle: {
     fontSize: 16,
@@ -57,15 +61,6 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     paddingVertical: 24,
     marginTop: 50,
-  },
-  signInContainer: {
-    zIndex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    width: "85%",
-    position: "absolute",
-    flexDirection: "row",
-    bottom: 40,
   },
   boxShadow: {
     ...Platform.select({

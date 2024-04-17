@@ -1,6 +1,15 @@
-import { View, Text, StyleSheet, Platform } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Platform,
+  SafeAreaView,
+  KeyboardAvoidingView,
+} from "react-native";
 import React from "react";
 import SignUp from "./SignUp";
+import SignIn from "./SignIn";
+import EnterCode from "./EnterCode";
 
 export default function AuthUI({
   type,
@@ -8,22 +17,28 @@ export default function AuthUI({
   type: "Sign Up" | "Sign In" | "Forgot Password" | "Enter Code";
 }) {
   return (
-    <View style={styles.background}>
+    <SafeAreaView style={styles.background}>
       <Text style={styles.title}>{type}</Text>
       <Text style={styles.subtitle}>
         Please{" "}
         {type === "Forgot Password"
           ? "enter your email"
           : type === "Enter Code"
-          ? "enter the code sent to your email"
+          ? "enter your code"
           : type.toLowerCase()}{" "}
         to continue
       </Text>
-      <View style={[styles.container, styles.boxShadow]}>
+      {type === "Sign Up" ? (
         <SignUp />
-      </View>
+      ) : type === "Sign In" ? (
+        <SignIn />
+      ) : type === "Enter Code" ? (
+        <EnterCode />
+      ) : (
+        <View />
+      )}
       <View style={styles.round} />
-    </View>
+    </SafeAreaView>
   );
 }
 
@@ -31,7 +46,7 @@ const styles = StyleSheet.create({
   background: {
     backgroundColor: "#3A2D2D",
     flex: 1,
-    paddingTop: 100,
+    // justifyContent: "center",
     alignItems: "center",
     overflow: "hidden",
   },
@@ -48,7 +63,6 @@ const styles = StyleSheet.create({
   },
   container: {
     backgroundColor: "#f3f3f3",
-    position: "relative",
     zIndex: 1,
     padding: 16,
     width: "85%",
@@ -76,6 +90,7 @@ const styles = StyleSheet.create({
     color: "white",
     fontWeight: "500",
     fontSize: 24,
+    marginTop: 100,
   },
   subtitle: {
     color: "white",

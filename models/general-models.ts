@@ -2,4 +2,9 @@ interface GeneralInitialState {
   isScreenScrolled: boolean;
 }
 
-export { GeneralInitialState };
+interface InputTitlePlaceholder {
+  title: string;
+  placeHolder: string;
+}
+
+export { GeneralInitialState, InputTitlePlaceholder };
