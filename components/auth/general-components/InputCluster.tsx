@@ -16,14 +16,14 @@ export default function InputCluster({
   return (
     <KeyboardAvoidingView>
       {inputArr.map((item) => (
-        <>
+        <View key={item.title}>
           <Text style={styles.title}>{item.title}</Text>
           <TextInput
             style={styles.input}
             placeholder={item.placeHolder}
             placeholderTextColor={"#7D7D7D"}
           />
-        </>
+        </View>
       ))}
     </KeyboardAvoidingView>
   );

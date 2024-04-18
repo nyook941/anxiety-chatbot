@@ -16,7 +16,7 @@ export default function App() {
 
   return (
     <Provider store={store}>
-      <AuthUI type={"Enter Code"} />
+      <AuthUI type={"Sign In"} />
       {/* <NavigationContainer>
         <DrawerNavigation />
       </NavigationContainer> */}

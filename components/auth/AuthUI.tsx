@@ -18,16 +18,6 @@ export default function AuthUI({
 }) {
   return (
     <SafeAreaView style={styles.background}>
-      <Text style={styles.title}>{type}</Text>
-      <Text style={styles.subtitle}>
-        Please{" "}
-        {type === "Forgot Password"
-          ? "enter your email"
-          : type === "Enter Code"
-          ? "enter your code"
-          : type.toLowerCase()}{" "}
-        to continue
-      </Text>
       {type === "Sign Up" ? (
         <SignUp />
       ) : type === "Sign In" ? (
@@ -46,7 +36,7 @@ const styles = StyleSheet.create({
   background: {
     backgroundColor: "#3A2D2D",
     flex: 1,
-    // justifyContent: "center",
+    justifyContent: "center",
     alignItems: "center",
     overflow: "hidden",
   },
@@ -85,15 +75,5 @@ const styles = StyleSheet.create({
         boxShadow: "0 2px 2px rgba(0,0,0,0.5)",
       },
     }),
-  },
-  title: {
-    color: "white",
-    fontWeight: "500",
-    fontSize: 24,
-    marginTop: 100,
-  },
-  subtitle: {
-    color: "white",
-    fontSize: 16,
   },
 });

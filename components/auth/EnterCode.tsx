@@ -11,6 +11,7 @@ import React from "react";
 import { InputTitlePlaceholder } from "../../models/general-models";
 import InputCluster from "./general-components/InputCluster";
 import ActionButton from "./general-components/ActionButton";
+import Title from "./general-components/Title";
 
 export default function EnterCode() {
   const inputArr = [
@@ -18,6 +19,7 @@ export default function EnterCode() {
   ] as InputTitlePlaceholder[];
   return (
     <>
+      <Title title="Enter Code" subtitle="enter the code sent to" />
       <View style={[styles.mainContainer, styles.boxShadow]}>
         <InputCluster inputArr={inputArr} />
         <ActionButton type={"primary"} title={"Continue"} />
@@ -66,5 +68,15 @@ const styles = StyleSheet.create({
     zIndex: 1,
     justifyContent: "center",
     width: "85%",
+  },
+  title: {
+    color: "white",
+    fontWeight: "500",
+    fontSize: 24,
+    marginTop: 100,
+  },
+  subtitle: {
+    color: "white",
+    fontSize: 16,
   },
 });

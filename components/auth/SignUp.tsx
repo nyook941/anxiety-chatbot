@@ -11,6 +11,7 @@ import React from "react";
 import ActionCluster from "./general-components/ActionCluster";
 import { InputTitlePlaceholder } from "../../models/general-models";
 import InputCluster from "./general-components/InputCluster";
+import Title from "./general-components/Title";
 
 export default function SignUp() {
   const inputArr = [
@@ -22,6 +23,10 @@ export default function SignUp() {
 
   return (
     <>
+      <Title
+        title={"Sign Up"}
+        subtitle="please create an account to continue"
+      />
       <View style={[styles.mainContainer, styles.boxShadow]}>
         <InputCluster inputArr={inputArr} />
         <ActionCluster title={"Sign Up"} />

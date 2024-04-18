@@ -3,6 +3,7 @@ import React from "react";
 import { InputTitlePlaceholder } from "../../models/general-models";
 import InputCluster from "./general-components/InputCluster";
 import ActionCluster from "./general-components/ActionCluster";
+import Title from "./general-components/Title";
 
 export default function SignIn() {
   const inputArr = [
@@ -12,6 +13,7 @@ export default function SignIn() {
 
   return (
     <>
+      <Title title={"Sign In"} subtitle="please sign in to continue" />
       <View style={[styles.mainContainer, styles.boxShadow]}>
         <InputCluster inputArr={inputArr} />
         <ActionCluster title={"Log In"} />
