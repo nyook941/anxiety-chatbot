@@ -1,28 +1,26 @@
 import { View, Text, StyleSheet, Platform, Pressable } from "react-native";
 import React from "react";
-import { InputTitlePlaceholder } from "../../models/general-models";
+import Title from "./general-components/Title";
 import InputCluster from "./general-components/InputCluster";
 import ActionButton from "./general-components/ActionButton";
-import Title from "./general-components/Title";
-import { AntDesign } from "@expo/vector-icons";
+import { InputTitlePlaceholder } from "../../models/general-models";
 
-export default function EnterCode() {
+export default function ResetPassword() {
   const inputArr = [
-    { title: "Code", placeHolder: "Enter the code sent to your email" },
+    { title: "Code", placeHolder: "Code" },
+    { title: "New Password", placeHolder: "New Password" },
+    { title: "Confirm Password", placeHolder: "Confirm Password" },
   ] as InputTitlePlaceholder[];
   return (
     <>
-      <Pressable style={[styles.backbutton, styles.boxShadow]}>
-        <AntDesign name="arrowleft" size={24} />
-      </Pressable>
       <Title
-        title="Enter Code"
-        subtitle="code sent to email"
-        altSubtitle={"k*****@gmail.com"}
+        title={"Reset Password"}
+        subtitle="enter the code sent to email"
+        altSubtitle={"kennan.k.wu@gmail.com"}
       />
       <View style={[styles.mainContainer, styles.boxShadow]}>
         <InputCluster inputArr={inputArr} />
-        <ActionButton type={"primary"} title={"Continue"} />
+        <ActionButton type={"primary"} title={"Submit"} />
       </View>
       <Pressable style={styles.container}>
         <Text style={styles.logIn}>Resend Code</Text>
@@ -30,7 +28,6 @@ export default function EnterCode() {
     </>
   );
 }
-
 const styles = StyleSheet.create({
   boxShadow: {
     ...Platform.select({
@@ -68,26 +65,5 @@ const styles = StyleSheet.create({
     zIndex: 1,
     justifyContent: "center",
     width: "85%",
-  },
-  title: {
-    color: "white",
-    fontWeight: "500",
-    fontSize: 24,
-    marginTop: 100,
-  },
-  subtitle: {
-    color: "white",
-    fontSize: 16,
-  },
-  backbutton: {
-    position: "absolute",
-    backgroundColor: "white",
-    top: 30,
-    left: 16,
-    height: 30,
-    width: 30,
-    justifyContent: "center",
-    alignItems: "center",
-    borderRadius: 15,
   },
 });

@@ -20,7 +20,7 @@ export default function ForgotPassword() {
         <ActionButton type={"primary"} title={"Continue"} />
       </View>
       <Pressable style={styles.container}>
-        <Text style={styles.logIn}>Resend Code</Text>
+        <Text style={styles.logIn}>Back to Sign In</Text>
       </Pressable>
     </>
   );
