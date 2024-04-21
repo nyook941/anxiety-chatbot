@@ -10,6 +10,7 @@ import React from "react";
 import SignUp from "./SignUp";
 import SignIn from "./SignIn";
 import EnterCode from "./EnterCode";
+import ForgotPassword from "./ForgotPassword";
 
 export default function AuthUI({
   type,
@@ -25,7 +26,7 @@ export default function AuthUI({
       ) : type === "Enter Code" ? (
         <EnterCode />
       ) : (
-        <View />
+        <ForgotPassword />
       )}
       <View style={styles.round} />
     </SafeAreaView>

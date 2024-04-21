@@ -1,17 +1,10 @@
-import {
-  View,
-  Text,
-  StyleSheet,
-  Platform,
-  ProgressBarAndroidBase,
-  Pressable,
-  Button,
-} from "react-native";
+import { View, Text, StyleSheet, Platform, Pressable } from "react-native";
 import React from "react";
 import { InputTitlePlaceholder } from "../../models/general-models";
 import InputCluster from "./general-components/InputCluster";
 import ActionButton from "./general-components/ActionButton";
 import Title from "./general-components/Title";
+import { AntDesign } from "@expo/vector-icons";
 
 export default function EnterCode() {
   const inputArr = [
@@ -19,6 +12,9 @@ export default function EnterCode() {
   ] as InputTitlePlaceholder[];
   return (
     <>
+      <Pressable style={[styles.backbutton, styles.boxShadow]}>
+        <AntDesign name="arrowleft" size={24} />
+      </Pressable>
       <Title title="Enter Code" subtitle="enter the code sent to" />
       <View style={[styles.mainContainer, styles.boxShadow]}>
         <InputCluster inputArr={inputArr} />
@@ -78,5 +74,16 @@ const styles = StyleSheet.create({
   subtitle: {
     color: "white",
     fontSize: 16,
+  },
+  backbutton: {
+    position: "absolute",
+    backgroundColor: "white",
+    top: 30,
+    left: 16,
+    height: 30,
+    width: 30,
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 15,
   },
 });
