@@ -1,34 +1,15 @@
 import { View, StyleSheet, Platform, SafeAreaView } from "react-native";
-import React from "react";
+import React, { ReactNode } from "react";
 import SignUp from "./SignUp";
 import SignIn from "./SignIn";
 import EnterCode from "./EnterCode";
 import ForgotPassword from "./ForgotPassword";
 import ResetPassword from "./ResetPassword";
 
-export default function AuthUI({
-  type,
-}: {
-  type:
-    | "Sign Up"
-    | "Sign In"
-    | "Forgot Password"
-    | "Enter Code"
-    | "Reset Password";
-}) {
+export default function AuthUI({ children }: { children?: ReactNode }) {
   return (
     <SafeAreaView style={styles.background}>
-      {type === "Sign Up" ? (
-        <SignUp />
-      ) : type === "Sign In" ? (
-        <SignIn />
-      ) : type === "Enter Code" ? (
-        <EnterCode />
-      ) : type === "Forgot Password" ? (
-        <ForgotPassword />
-      ) : (
-        <ResetPassword />
-      )}
+      {children}
       <View style={styles.round} />
     </SafeAreaView>
   );

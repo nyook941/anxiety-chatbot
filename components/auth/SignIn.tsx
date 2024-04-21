@@ -4,6 +4,7 @@ import { InputTitlePlaceholder } from "../../models/general-models";
 import InputCluster from "./general-components/InputCluster";
 import ActionCluster from "./general-components/ActionCluster";
 import Title from "./general-components/Title";
+import AuthUI from "./AuthUI";
 
 export default function SignIn() {
   const inputArr = [
@@ -12,7 +13,7 @@ export default function SignIn() {
   ] as InputTitlePlaceholder[];
 
   return (
-    <>
+    <AuthUI>
       <Title title={"Sign In"} subtitle="please sign in to continue" />
       <View style={[styles.mainContainer, styles.boxShadow]}>
         <InputCluster inputArr={inputArr} />
@@ -25,7 +26,7 @@ export default function SignIn() {
         <Text style={styles.subtitle}>Already have an account?</Text>
         <Text style={styles.logIn}>Sign In</Text>
       </Pressable>
-    </>
+    </AuthUI>
   );
 }
 

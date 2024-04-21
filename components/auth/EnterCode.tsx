@@ -4,17 +4,14 @@ import { InputTitlePlaceholder } from "../../models/general-models";
 import InputCluster from "./general-components/InputCluster";
 import ActionButton from "./general-components/ActionButton";
 import Title from "./general-components/Title";
-import { AntDesign } from "@expo/vector-icons";
+import AuthUI from "./AuthUI";
 
 export default function EnterCode() {
   const inputArr = [
     { title: "Code", placeHolder: "Enter the code sent to your email" },
   ] as InputTitlePlaceholder[];
   return (
-    <>
-      <Pressable style={[styles.backbutton, styles.boxShadow]}>
-        <AntDesign name="arrowleft" size={24} />
-      </Pressable>
+    <AuthUI>
       <Title
         title="Enter Code"
         subtitle="code sent to email"
@@ -27,7 +24,13 @@ export default function EnterCode() {
       <Pressable style={styles.container}>
         <Text style={styles.logIn}>Resend Code</Text>
       </Pressable>
-    </>
+      <Pressable style={styles.signInContainer}>
+        <Text style={styles.bottomSubtitle}>
+          Want to use a different account?
+        </Text>
+        <Text style={styles.logIn}>Sign In</Text>
+      </Pressable>
+    </AuthUI>
   );
 }
 
@@ -79,15 +82,17 @@ const styles = StyleSheet.create({
     color: "white",
     fontSize: 16,
   },
-  backbutton: {
-    position: "absolute",
-    backgroundColor: "white",
-    top: 30,
-    left: 16,
-    height: 30,
-    width: 30,
+  bottomSubtitle: {
+    fontSize: 16,
+    color: "#7d7d7d",
+  },
+  signInContainer: {
+    zIndex: 1,
     justifyContent: "center",
     alignItems: "center",
-    borderRadius: 15,
+    width: "85%",
+    position: "absolute",
+    flexDirection: "row",
+    bottom: 40,
   },
 });

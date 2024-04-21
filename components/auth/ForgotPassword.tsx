@@ -4,13 +4,14 @@ import Title from "./general-components/Title";
 import InputCluster from "./general-components/InputCluster";
 import ActionButton from "./general-components/ActionButton";
 import { InputTitlePlaceholder } from "../../models/general-models";
+import AuthUI from "./AuthUI";
 
 export default function ForgotPassword() {
   const inputArr = [
     { title: "Username", placeHolder: "Enter your username" },
   ] as InputTitlePlaceholder[];
   return (
-    <>
+    <AuthUI>
       <Title
         title={"Enter Username"}
         subtitle="a code will be emailed to your account"
@@ -22,7 +23,7 @@ export default function ForgotPassword() {
       <Pressable style={styles.container}>
         <Text style={styles.logIn}>Back to Sign In</Text>
       </Pressable>
-    </>
+    </AuthUI>
   );
 }
 const styles = StyleSheet.create({

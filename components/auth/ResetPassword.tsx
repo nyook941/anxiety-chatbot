@@ -4,6 +4,7 @@ import Title from "./general-components/Title";
 import InputCluster from "./general-components/InputCluster";
 import ActionButton from "./general-components/ActionButton";
 import { InputTitlePlaceholder } from "../../models/general-models";
+import AuthUI from "./AuthUI";
 
 export default function ResetPassword() {
   const inputArr = [
@@ -12,7 +13,7 @@ export default function ResetPassword() {
     { title: "Confirm Password", placeHolder: "Confirm Password" },
   ] as InputTitlePlaceholder[];
   return (
-    <>
+    <AuthUI>
       <Title
         title={"Reset Password"}
         subtitle="enter the code sent to email"
@@ -25,7 +26,7 @@ export default function ResetPassword() {
       <Pressable style={styles.container}>
         <Text style={styles.logIn}>Resend Code</Text>
       </Pressable>
-    </>
+    </AuthUI>
   );
 }
 const styles = StyleSheet.create({
