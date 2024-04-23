@@ -1,10 +1,5 @@
 import { View, StyleSheet, Platform, SafeAreaView } from "react-native";
 import React, { ReactNode } from "react";
-import SignUp from "./SignUp";
-import SignIn from "./SignIn";
-import EnterCode from "./EnterCode";
-import ForgotPassword from "./ForgotPassword";
-import ResetPassword from "./ResetPassword";
 
 export default function AuthUI({ children }: { children?: ReactNode }) {
   return (

@@ -5,12 +5,16 @@ interface AuthInitialState {
   loggedIn: boolean;
   username: string;
   password: string;
+  email: string;
+  confirmPassword: string;
 }
 
 const initialState: AuthInitialState = {
   loggedIn: false,
   username: "",
   password: "",
+  email: "",
+  confirmPassword: "",
 };
 
 export const signInUser = createAsyncThunk(
@@ -41,6 +45,12 @@ export const authSlice = createSlice({
     setPassword: (state, action: PayloadAction<string>) => {
       state.password = action.payload;
     },
+    setEmail: (state, action: PayloadAction<string>) => {
+      state.email = action.payload;
+    },
+    setConfirmPassword: (state, action: PayloadAction<string>) => {
+      state.confirmPassword = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -50,6 +60,7 @@ export const authSlice = createSlice({
   },
 });
 
-export const { setUsername, setPassword } = authSlice.actions;
+export const { setUsername, setPassword, setConfirmPassword, setEmail } =
+  authSlice.actions;
 
 export default authSlice.reducer;

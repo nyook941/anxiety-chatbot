@@ -13,9 +13,11 @@ import {
   setUsername,
   signInUser,
 } from "../../redux/slices/auth-slice";
+import { useNavigation } from "@react-navigation/native";
 
 export default function SignIn() {
   const dispatch = useDispatch<AppDispatch>();
+  const navigation = useNavigation();
 
   const { username, password } = useSelector((state: RootState) => state.auth);
 
@@ -38,6 +40,10 @@ export default function SignIn() {
     dispatch(signInUser({ username: username, password: password }));
   };
 
+  const handleSignUpPress = () => {
+    navigation.navigate("SignUp" as never);
+  };
+
   return (
     <AuthUI>
       <Title title={"Sign In"} subtitle="please sign in to continue" />
@@ -48,9 +54,9 @@ export default function SignIn() {
       <Pressable style={styles.container}>
         <Text style={styles.logIn}>Forgot Password?</Text>
       </Pressable>
-      <Pressable style={styles.signInContainer}>
-        <Text style={styles.subtitle}>Already have an account?</Text>
-        <Text style={styles.logIn}>Sign In</Text>
+      <Pressable style={styles.signInContainer} onPress={handleSignUpPress}>
+        <Text style={styles.subtitle}>Don't have an account?</Text>
+        <Text style={styles.logIn}>Sign Up</Text>
       </Pressable>
     </AuthUI>
   );

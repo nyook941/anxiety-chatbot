@@ -15,17 +15,51 @@ import Title from "./general-components/Title";
 import AuthUI from "./AuthUI";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
+import { useNavigation } from "@react-navigation/native";
+import {
+  setConfirmPassword,
+  setEmail,
+  setPassword,
+  setUsername,
+} from "../../redux/slices/auth-slice";
 
 export default function SignUp() {
   const dispatch = useDispatch();
-  const { username, password } = useSelector((state: RootState) => state.auth);
+  const { username, password, email, confirmPassword } = useSelector(
+    (state: RootState) => state.auth
+  );
+  const navigation = useNavigation();
 
   const inputArr = [
-    { title: "Username", placeHolder: "John Doe" },
-    { title: "Email", placeHolder: "johndoe@gmail.com" },
-    { title: "Password", placeHolder: "8 characters or more" },
-    { title: "Confirm Password", placeHolder: "re-enter your password" },
+    {
+      title: "Username",
+      placeHolder: "John Doe",
+      value: username,
+      setValue: (val: string) => dispatch(setUsername(val)),
+    },
+    {
+      title: "Email",
+      placeHolder: "johndoe@gmail.com",
+      value: email,
+      setValue: (val: string) => dispatch(setEmail(val)),
+    },
+    {
+      title: "Password",
+      placeHolder: "8 characters or more",
+      value: password,
+      setValue: (val: string) => dispatch(setPassword(val)),
+    },
+    {
+      title: "Confirm Password",
+      placeHolder: "re-enter your password",
+      value: confirmPassword,
+      setValue: (val: string) => dispatch(setConfirmPassword(val)),
+    },
   ] as InputTitlePlaceholder[];
+
+  const handleSignInPress = () => {
+    navigation.navigate("SignIn" as never);
+  };
 
   return (
     <AuthUI>
@@ -35,9 +69,9 @@ export default function SignUp() {
       />
       <View style={[styles.mainContainer, styles.boxShadow]}>
         <InputCluster inputArr={inputArr} />
-        <ActionCluster title={"Sign Up"} />
+        <ActionCluster title={"Sign Up"} mainAction={} />
       </View>
-      <Pressable style={styles.signInContainer}>
+      <Pressable style={styles.signInContainer} onPress={handleSignInPress}>
         <Text style={styles.subtitle}>Already have an account?</Text>
         <Text style={styles.logIn}>Sign In</Text>
       </Pressable>
