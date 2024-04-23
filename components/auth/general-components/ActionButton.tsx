@@ -4,12 +4,15 @@ import React from "react";
 export default function ActionButton({
   type,
   title,
+  onPress,
 }: {
   type: "primary" | "secondary";
   title: string;
+  onPress: () => void;
 }) {
   return (
     <Pressable
+      onPress={onPress}
       style={[
         type === "primary" ? styles.signUpButton : styles.thirdPartyButton,
         styles.boxShadow,

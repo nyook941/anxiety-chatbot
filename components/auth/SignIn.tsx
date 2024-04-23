@@ -1,23 +1,49 @@
 import { View, Text, Pressable, StyleSheet, Platform } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { InputTitlePlaceholder } from "../../models/general-models";
 import InputCluster from "./general-components/InputCluster";
 import ActionCluster from "./general-components/ActionCluster";
 import Title from "./general-components/Title";
 import AuthUI from "./AuthUI";
+import { SignInInput, autoSignIn, signIn } from "@aws-amplify/auth";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../../redux/store";
+import {
+  setPassword,
+  setUsername,
+  signInUser,
+} from "../../redux/slices/auth-slice";
 
 export default function SignIn() {
+  const dispatch = useDispatch<AppDispatch>();
+
+  const { username, password } = useSelector((state: RootState) => state.auth);
+
   const inputArr = [
-    { title: "Username", placeHolder: "John Doe" },
-    { title: "Password", placeHolder: "8 characters or more" },
+    {
+      title: "Username",
+      placeHolder: "username",
+      value: username,
+      setValue: (val: string) => dispatch(setUsername(val)),
+    },
+    {
+      title: "Password",
+      placeHolder: "8 characters or more",
+      value: password,
+      setValue: (val: string) => dispatch(setPassword(val)),
+    },
   ] as InputTitlePlaceholder[];
+
+  const handleSignIn = () => {
+    dispatch(signInUser({ username: username, password: password }));
+  };
 
   return (
     <AuthUI>
       <Title title={"Sign In"} subtitle="please sign in to continue" />
       <View style={[styles.mainContainer, styles.boxShadow]}>
         <InputCluster inputArr={inputArr} />
-        <ActionCluster title={"Log In"} />
+        <ActionCluster title={"Sign In"} mainAction={handleSignIn} />
       </View>
       <Pressable style={styles.container}>
         <Text style={styles.logIn}>Forgot Password?</Text>

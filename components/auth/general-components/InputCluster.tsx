@@ -24,12 +24,16 @@ export default function InputCluster({
               placeholder={item.placeHolder}
               placeholderTextColor={"#7D7D7D"}
               secureTextEntry
+              value={item.value}
+              onChangeText={(text) => item.setValue(text)}
             />
           ) : (
             <TextInput
               style={styles.input}
               placeholder={item.placeHolder}
               placeholderTextColor={"#7D7D7D"}
+              value={item.value}
+              onChangeText={(text) => item.setValue(text)}
             />
           )}
         </View>

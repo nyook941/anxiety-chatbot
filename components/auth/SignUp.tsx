@@ -13,8 +13,13 @@ import { InputTitlePlaceholder } from "../../models/general-models";
 import InputCluster from "./general-components/InputCluster";
 import Title from "./general-components/Title";
 import AuthUI from "./AuthUI";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../../redux/store";
 
 export default function SignUp() {
+  const dispatch = useDispatch();
+  const { username, password } = useSelector((state: RootState) => state.auth);
+
   const inputArr = [
     { title: "Username", placeHolder: "John Doe" },
     { title: "Email", placeHolder: "johndoe@gmail.com" },

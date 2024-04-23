@@ -3,6 +3,7 @@ import chatSlice from "./slices/chat-slice";
 import moodSlice from "./slices/mood-slice";
 import generalSlice from "./slices/general-slice";
 import userSlice from "./slices/user-slice";
+import authSlice from "./slices/auth-slice";
 
 export const store = configureStore({
   reducer: {
@@ -10,6 +11,7 @@ export const store = configureStore({
     mood: moodSlice,
     general: generalSlice,
     user: userSlice,
+    auth: authSlice,
   },
 });
 

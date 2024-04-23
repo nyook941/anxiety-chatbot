@@ -2,17 +2,23 @@ import { View, Text, StyleSheet } from "react-native";
 import React from "react";
 import ActionButton from "./ActionButton";
 
-export default function ActionCluster({ title }: { title: string }) {
+export default function ActionCluster({
+  title,
+  mainAction,
+}: {
+  title: string;
+  mainAction: () => void;
+}) {
   return (
     <View style={styles.buttonsContainer}>
-      <ActionButton type={"primary"} title={title} />
+      <ActionButton type={"primary"} title={title} onPress={mainAction} />
       <View style={styles.divContainer}>
         <View style={styles.divBar} />
         <Text style={styles.or}>or</Text>
         <View style={styles.divBar} />
       </View>
-      <ActionButton type={"secondary"} title={"Google"} />
-      <ActionButton type={"secondary"} title={"Apple"} />
+      <ActionButton type={"secondary"} title={"Google"} onPress={mainAction} />
+      <ActionButton type={"secondary"} title={"Apple"} onPress={mainAction} />
     </View>
   );
 }
