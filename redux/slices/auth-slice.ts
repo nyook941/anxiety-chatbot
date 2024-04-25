@@ -7,6 +7,7 @@ import {
   signUp,
   confirmResetPassword,
   getCurrentUser,
+  signOut,
 } from "@aws-amplify/auth";
 
 interface AuthInitialState {
@@ -147,6 +148,14 @@ export const handleConfirmResetPassword = createAsyncThunk(
   }
 );
 
+export const signOutUser = createAsyncThunk("auth/signOutUser", async () => {
+  try {
+    await signOut();
+  } catch (error) {
+    console.log("error signing out: ", error);
+  }
+});
+
 export const authSlice = createSlice({
   name: "auth",
   initialState,
@@ -189,7 +198,13 @@ export const authSlice = createSlice({
 
       .addCase(handleConfirmResetPassword.pending, (state) => {})
       .addCase(handleConfirmResetPassword.fulfilled, (state, action) => {})
-      .addCase(handleConfirmResetPassword.rejected, (state, action) => {});
+      .addCase(handleConfirmResetPassword.rejected, (state, action) => {})
+
+      .addCase(signOutUser.pending, (state) => {})
+      .addCase(signOutUser.fulfilled, (state, action) => {
+        state.loggedIn = false;
+      })
+      .addCase(signOutUser.rejected, (state, action) => {});
   },
 });
 

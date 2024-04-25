@@ -8,6 +8,7 @@ import { useDispatch } from "react-redux";
 import { postUserSignInData } from "../redux/slices/user-slice";
 import { getCurrentUser, fetchUserAttributes } from "@aws-amplify/auth";
 import { AppDispatch } from "../redux/store";
+import CustomDrawerContent from "./CustomDrawerContent";
 
 const Drawer = createDrawerNavigator();
 
@@ -29,7 +30,10 @@ export default function DrawerNavigation() {
   });
 
   return (
-    <Drawer.Navigator initialRouteName="Chat">
+    <Drawer.Navigator
+      initialRouteName="Chat"
+      drawerContent={(props) => <CustomDrawerContent {...props} />}
+    >
       <Drawer.Screen
         name="Chat"
         component={Chatbot}
