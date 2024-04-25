@@ -14,17 +14,18 @@ import InputCluster from "./general-components/InputCluster";
 import Title from "./general-components/Title";
 import AuthUI from "./AuthUI";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../../redux/store";
+import { AppDispatch, RootState } from "../../redux/store";
 import { useNavigation } from "@react-navigation/native";
 import {
   setConfirmPassword,
   setEmail,
   setPassword,
   setUsername,
+  signUpUser,
 } from "../../redux/slices/auth-slice";
 
 export default function SignUp() {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
   const { username, password, email, confirmPassword } = useSelector(
     (state: RootState) => state.auth
   );
@@ -61,6 +62,12 @@ export default function SignUp() {
     navigation.navigate("SignIn" as never);
   };
 
+  const handleSignUp = () => {
+    dispatch(
+      signUpUser({ username: username, password: password, email: email })
+    );
+  };
+
   return (
     <AuthUI>
       <Title
@@ -69,7 +76,7 @@ export default function SignUp() {
       />
       <View style={[styles.mainContainer, styles.boxShadow]}>
         <InputCluster inputArr={inputArr} />
-        <ActionCluster title={"Sign Up"} mainAction={} />
+        <ActionCluster title={"Sign Up"} mainAction={handleSignUp} />
       </View>
       <Pressable style={styles.signInContainer} onPress={handleSignInPress}>
         <Text style={styles.subtitle}>Already have an account?</Text>
