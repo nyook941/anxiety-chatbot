@@ -5,11 +5,42 @@ import InputCluster from "./general-components/InputCluster";
 import ActionButton from "./general-components/ActionButton";
 import { InputTitlePlaceholder } from "../../models/general-models";
 import AuthUI from "./AuthUI";
+import { useNavigation } from "@react-navigation/native";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../../redux/store";
+import {
+  handleResetPassword,
+  setUsername,
+} from "../../redux/slices/auth-slice";
 
 export default function ForgotPassword() {
+  const navigation = useNavigation();
+  const dispatch = useDispatch<AppDispatch>();
+
+  const { username } = useSelector((state: RootState) => state.auth);
+
   const inputArr = [
-    { title: "Username", placeHolder: "Enter your username" },
+    {
+      title: "Username",
+      placeHolder: "Enter your username",
+      value: username,
+      setValue: (val: string) => dispatch(setUsername(val)),
+    },
   ] as InputTitlePlaceholder[];
+
+  const handleSignIn = () => {
+    navigation.navigate("SignIn" as never);
+  };
+
+  const handleForgotPassword = () => {
+    dispatch(
+      handleResetPassword({
+        username,
+        navigateCallback: () => navigation.navigate("ResetPassword" as never),
+      })
+    );
+  };
+
   return (
     <AuthUI>
       <Title
@@ -18,9 +49,13 @@ export default function ForgotPassword() {
       />
       <View style={[styles.mainContainer, styles.boxShadow]}>
         <InputCluster inputArr={inputArr} />
-        <ActionButton type={"primary"} title={"Continue"} />
+        <ActionButton
+          type={"primary"}
+          title={"Continue"}
+          onPress={handleForgotPassword}
+        />
       </View>
-      <Pressable style={styles.container}>
+      <Pressable style={styles.container} onPress={handleSignIn}>
         <Text style={styles.logIn}>Back to Sign In</Text>
       </Pressable>
     </AuthUI>

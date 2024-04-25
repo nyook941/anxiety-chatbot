@@ -5,7 +5,6 @@ import InputCluster from "./general-components/InputCluster";
 import ActionCluster from "./general-components/ActionCluster";
 import Title from "./general-components/Title";
 import AuthUI from "./AuthUI";
-import { SignInInput, autoSignIn, signIn } from "@aws-amplify/auth";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../redux/store";
 import {
@@ -44,6 +43,10 @@ export default function SignIn() {
     navigation.navigate("SignUp" as never);
   };
 
+  const handleForgotPassowrd = () => {
+    navigation.navigate("ForgotPassword" as never);
+  };
+
   return (
     <AuthUI>
       <Title title={"Sign In"} subtitle="please sign in to continue" />
@@ -51,7 +54,7 @@ export default function SignIn() {
         <InputCluster inputArr={inputArr} />
         <ActionCluster title={"Sign In"} mainAction={handleSignIn} />
       </View>
-      <Pressable style={styles.container}>
+      <Pressable style={styles.container} onPress={handleForgotPassowrd}>
         <Text style={styles.logIn}>Forgot Password?</Text>
       </Pressable>
       <Pressable style={styles.signInContainer} onPress={handleSignUpPress}>

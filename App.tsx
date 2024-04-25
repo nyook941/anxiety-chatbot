@@ -3,11 +3,10 @@ import { RootState, store } from "./redux/store";
 import "react-native-gesture-handler";
 import React from "react";
 import { NavigationContainer } from "@react-navigation/native";
-import DrawerNavigation from "./navigation/Drawer";
 import { Amplify } from "aws-amplify";
 import amplifyconfig from "./amplifyconfiguration.json";
 import { DataStore } from "@aws-amplify/datastore";
-import AuthNavigator from "./navigation/AuthNavigator";
+import RootNavigator from "./navigation/RootNavigator";
 Amplify.configure(amplifyconfig);
 
 export default function App() {
@@ -16,7 +15,7 @@ export default function App() {
   return (
     <Provider store={store}>
       <NavigationContainer>
-        {true ? <AuthNavigator /> : <DrawerNavigation />}
+        <RootNavigator />
       </NavigationContainer>
     </Provider>
   );

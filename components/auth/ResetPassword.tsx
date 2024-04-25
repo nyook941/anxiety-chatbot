@@ -5,13 +5,57 @@ import InputCluster from "./general-components/InputCluster";
 import ActionButton from "./general-components/ActionButton";
 import { InputTitlePlaceholder } from "../../models/general-models";
 import AuthUI from "./AuthUI";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../../redux/store";
+import { useNavigation } from "@react-navigation/native";
+import {
+  handleConfirmResetPassword,
+  setCode,
+  setConfirmPassword,
+  setPassword,
+} from "../../redux/slices/auth-slice";
 
 export default function ResetPassword() {
+  const dispatch = useDispatch<AppDispatch>();
+  const navigation = useNavigation();
+
+  const { username, code, password, confirmPassword } = useSelector(
+    (state: RootState) => state.auth
+  );
   const inputArr = [
-    { title: "Code", placeHolder: "Code" },
-    { title: "New Password", placeHolder: "New Password" },
-    { title: "Confirm Password", placeHolder: "Confirm Password" },
+    {
+      title: "Code",
+      placeHolder: "Code",
+      value: code,
+      setValue: (val: string) => dispatch(setCode(val)),
+    },
+    {
+      title: "New Password",
+      placeHolder: "New Password",
+      value: password,
+      setValue: (val: string) => dispatch(setPassword(val)),
+    },
+    {
+      title: "Confirm Password",
+      placeHolder: "Confirm Password",
+      value: confirmPassword,
+      setValue: (val: string) => dispatch(setConfirmPassword(val)),
+    },
   ] as InputTitlePlaceholder[];
+
+  const handleConfirmResetPasswordThunk = () => {
+    dispatch(
+      handleConfirmResetPassword({
+        input: {
+          username,
+          confirmationCode: code,
+          newPassword: password,
+        },
+        navigateCallback: () => navigation.navigate("SignIn" as never),
+      })
+    );
+  };
+
   return (
     <AuthUI>
       <Title
@@ -21,7 +65,11 @@ export default function ResetPassword() {
       />
       <View style={[styles.mainContainer, styles.boxShadow]}>
         <InputCluster inputArr={inputArr} />
-        <ActionButton type={"primary"} title={"Submit"} />
+        <ActionButton
+          type={"primary"}
+          title={"Submit"}
+          onPress={handleConfirmResetPasswordThunk}
+        />
       </View>
       <Pressable style={styles.container}>
         <Text style={styles.logIn}>Resend Code</Text>
