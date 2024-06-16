@@ -5,11 +5,17 @@ import { LazyUser, User } from "../../src/models";
 interface UserInitialState {
   loggedIn: boolean;
   user: User | undefined;
+  name: string;
+  dob: string;
+  generalInfo: string;
 }
 
 const initialState: UserInitialState = {
   loggedIn: true,
   user: undefined,
+  name: "",
+  dob: "",
+  generalInfo: ""
 };
 
 export const postUserSignInData = createAsyncThunk(
@@ -51,14 +57,29 @@ export const postUserSignInData = createAsyncThunk(
 export const userSlice = createSlice({
   name: "user",
   initialState,
-  reducers: {},
+  reducers: {
+    setName: (state, action: PayloadAction<string>) =>{
+      state.name= action.payload;
+    },
+    setDob: (state, action: PayloadAction<string>) =>{
+      state.dob = action.payload;
+    },
+    setGeneralInfo: (state, action: PayloadAction<string>) => {
+      state.generalInfo = action.payload;
+    },
+    updateUser: (state, action: PayloadAction<User>) => {
+      state.user = action.payload;
+    }
+  },
   extraReducers: (builder) => {
     builder.addCase(postUserSignInData.fulfilled, (state, action) => {
       state.user = action.payload;
+      state.name = action.payload?.username || '';
+      state.dob = action.payload?.birthdate || '';
     });
   },
 });
 
-export const {} = userSlice.actions;
+export const {setName, setDob, setGeneralInfo, updateUser} = userSlice.actions;
 
 export default userSlice.reducer;
