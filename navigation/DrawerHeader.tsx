@@ -9,6 +9,7 @@ import { RootState } from "../redux/store";
 type DrawerParamList = {
   Chat: undefined;
   "Mood Diary": undefined;
+  "User Info": undefined;
 };
 
 type NavigationProp = DrawerNavigationProp<DrawerParamList>;
