@@ -8,6 +8,7 @@ import { useDispatch } from "react-redux";
 import { postUserSignInData } from "../redux/slices/user-slice";
 import { getCurrentUser, fetchUserAttributes } from "@aws-amplify/auth";
 import { AppDispatch } from "../redux/store";
+import UserInfo from "../components/user-settings/UserInfo";
 
 const Drawer = createDrawerNavigator();
 
@@ -40,6 +41,13 @@ export default function DrawerNavigation() {
       <Drawer.Screen
         name="Mood Diary"
         component={MoodDiary}
+        options={{
+          header: () => <DrawerHeader color={"black"} background={"white"} />,
+        }}
+      />
+      <Drawer.Screen
+        name="User Info"
+        component={UserInfo}
         options={{
           header: () => <DrawerHeader color={"black"} background={"white"} />,
         }}
